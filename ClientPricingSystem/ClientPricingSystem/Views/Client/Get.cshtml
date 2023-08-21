@@ -1,0 +1,21 @@
+﻿@using ClientPricingSystem.Core.Dtos
+@model ClientDto
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>MarkupRate</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.Clients)
+        {
+            <tr>
+                <td>@entry.Name</td>
+                <td>@entry.Address</td>
+                <td>@entry.MarkupRate</td>
+            </tr>
+        }
+    </tbody>
+</table>

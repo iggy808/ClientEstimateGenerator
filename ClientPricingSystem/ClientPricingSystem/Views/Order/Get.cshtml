@@ -1,0 +1,25 @@
+﻿@using ClientPricingSystem.Core.Dtos
+@model OrderDto
+<table>
+    <thead>
+        <tr>
+            <th>ClientId</th>
+            <th>MarkupRate</th>
+            <th>ArtistFee</th>
+            <th>SubTotal</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.Orders)
+        {
+            <tr>
+                <td>@entry.ClientId</td>
+                <td>@entry.Client.MarkupRate</td>
+                <td>@entry.ArtistFee</td>
+                <td>@entry.SubTotal</td>
+                <td>@entry.Total</td>
+            </tr>
+        }
+    </tbody>
+</table>

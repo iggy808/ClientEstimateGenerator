@@ -1,0 +1,11 @@
+﻿@using ClientPricingSystem.Core.Dtos
+@model VendorDto
+
+@using (Html.BeginForm("Create", "Vendor", FormMethod.Post))
+{
+    <span>@Html.LabelFor(m => m.Name)</span> @Html.TextBoxFor(m => m.Name)<br />
+    <span>@Html.LabelFor(m => m.Notes)</span> @Html.TextBoxFor(m => m.Notes)<br />
+    <span>@Html.LabelFor(m => m.DomainsRaw)</span> @Html.TextBoxFor(m => m.DomainsRaw)<br />
+    <input id="Submit" type="submit" value="submit"/>
+}
+

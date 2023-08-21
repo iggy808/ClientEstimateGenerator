@@ -1,0 +1,21 @@
+﻿@using ClientPricingSystem.Core.Dtos
+@model VendorDto
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Notes</th>
+            <th>Domains</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (VendorDto brand in Model.Vendors)
+        {
+            <tr>
+                <td>@brand.Name</td>
+                <td>@brand.Notes</td>
+                <td>@brand.DomainsRaw</td>
+            </tr>
+        }
+    </tbody>
+</table>

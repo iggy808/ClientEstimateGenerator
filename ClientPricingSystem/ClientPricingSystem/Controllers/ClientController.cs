@@ -34,7 +34,7 @@ public class ClientController : Controller
     {
         if (clientDto != null)
         {
-            await _mediator.Send(new CreateClient_FromDto.Query { ClientDto = clientDto }).ConfigureAwait(false);
+            await _mediator.Send(new CreateClient_FromDto.Command { ClientDto = clientDto }).ConfigureAwait(false);
         }
         return RedirectToAction("Get", "Client", null);
     }

@@ -9,12 +9,12 @@ using MongoDB.Driver;
 namespace ClientPricingSystem.Core.MediatRMethods.Vendor;
 public class CreateVendor_FromDto
 {
-    public class Query : IRequest<Unit> 
+    public class Command : IRequest<Unit> 
     {
         public VendorDto VendorDto { get; set; }
     }
 
-    public class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Command, Unit>
     {
         IMongoDatabase _context;
         DatabaseConfiguration _config;
@@ -24,11 +24,11 @@ public class CreateVendor_FromDto
             _config = config.Value;
         }
 
-        public async Task<Unit> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
         {
             IMongoCollection<VendorDocument> vendorCollection = _context.GetCollection<VendorDocument>(_config.Vendors);
 
-            VendorDocument vendor = VendorMapper.MapVendorDto_VendorDocument(query.VendorDto);
+            VendorDocument vendor = VendorMapper.MapVendorDto_VendorDocument(command.VendorDto);
             await vendorCollection.InsertOneAsync(vendor).ConfigureAwait(false);
 
             return Unit.Value;

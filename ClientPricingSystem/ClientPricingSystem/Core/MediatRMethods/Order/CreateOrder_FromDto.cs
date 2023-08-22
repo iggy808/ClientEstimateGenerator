@@ -9,12 +9,12 @@ using MongoDB.Driver;
 namespace ClientPricingSystem.Core.MediatRMethods.Order;
 public class CreateOrder_FromDto
 {
-    public class Query : IRequest<Unit> 
+    public class Command : IRequest<Unit> 
     {
         public OrderDto OrderDto { get; set; }
     }
 
-    public class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Command, Unit>
     {
         IMongoDatabase _context;
         DatabaseConfiguration _config;
@@ -27,12 +27,12 @@ public class CreateOrder_FromDto
             _mediator = mediator;
         }
 
-        public async Task<Unit> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
         {
             IMongoCollection<ClientDocument> clientCollection = _context.GetCollection<ClientDocument>(_config.Clients);
             IMongoCollection<OrderDocument> orderCollection = _context.GetCollection<OrderDocument>(_config.Orders);
 
-            OrderDocument order = OrderMapper.MapOrderDto_OrderDocument(query.OrderDto);
+            OrderDocument order = OrderMapper.MapOrderDto_OrderDocument(command.OrderDto);
 
             // Manually assign new ID (needed for mapping OrderItems documents to this order)
             order.Id = Guid.NewGuid();
@@ -44,7 +44,7 @@ public class CreateOrder_FromDto
             if (order.Items != null)
             {
                 // Create order items
-                await _mediator.Send(new CreateOrderItems.Query { Items = order.Items, OrderId = order.Id }).ConfigureAwait(false);
+                await _mediator.Send(new CreateOrderItems.Command { Items = order.Items, OrderId = order.Id }).ConfigureAwait(false);
 
                 // Calculate order totals
                 foreach (OrderItemDocument item in order.Items)

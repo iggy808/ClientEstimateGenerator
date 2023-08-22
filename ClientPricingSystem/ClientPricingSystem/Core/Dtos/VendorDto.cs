@@ -9,5 +9,5 @@ public class VendorDto
 
     // View fields
     public string DomainsRaw { get; set; }
-    public List<VendorDto>? Vendors { get; set; }
+    public List<VendorDto> Vendors { get; set; }
 }

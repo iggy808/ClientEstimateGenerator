@@ -29,11 +29,19 @@ public class VendorController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(VendorDto vendor)
+    public async Task<IActionResult> Create(VendorDto vendorDto)
     {
-        if (vendor != null)
+        if (vendorDto != null)
         {
-            await _mediator.Send(new CreateVendor_FromDto.Command { VendorDto = vendor }).ConfigureAwait(false);
+            try
+            {
+                await _mediator.Send(new CreateVendor_FromDto.Command { VendorDto = vendorDto }).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                // TODO: Figure out a better way to handle this.
+                Console.WriteLine("Error occured while creating vendor:\n" + e.Message);
+            }
         }
         return RedirectToAction("Get", "Vendor", null);
     }

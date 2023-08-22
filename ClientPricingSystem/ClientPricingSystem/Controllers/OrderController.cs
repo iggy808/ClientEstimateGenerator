@@ -46,7 +46,15 @@ public class OrderController : Controller
     {
         if (orderDto != null)
         {
-            await _mediator.Send(new CreateOrder_FromDto.Command { OrderDto = orderDto }).ConfigureAwait(false);
+            try
+            {
+                await _mediator.Send(new CreateOrder_FromDto.Command { OrderDto = orderDto }).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                // TODO: Figure out a better way to handle this.
+                Console.WriteLine("Error occured while creating order:\n" + e.Message);
+            }
         }
         return RedirectToAction("Get", "Order", null);
     }

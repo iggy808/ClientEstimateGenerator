@@ -1,5 +1,8 @@
 using ClientPricingSystem.Configuration;
+using ClientPricingSystem.Core.PipelineBehaviors;
 using ClientPricingSystem.Core.Services;
+using FluentValidation;
+using MediatR;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Reflection;
@@ -21,6 +24,10 @@ builder.Services.AddSingleton<IVendorService, VendorService>();
 
 // Configure MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+
+// Configure FluentValidation and ValidationPipeline
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

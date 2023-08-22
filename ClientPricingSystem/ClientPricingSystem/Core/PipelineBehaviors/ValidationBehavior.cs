@@ -28,6 +28,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
             {
                 stringBuilder.AppendLine(failure.ErrorMessage);
             }
+            // TODO: Figure out a better way to handle this.
             throw new Exception("Validation failed for request:\n" + stringBuilder.ToString());
         }
 

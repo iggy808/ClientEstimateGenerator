@@ -46,7 +46,7 @@ public class OrderController : Controller
     {
         if (orderDto != null)
         {
-            await _mediator.Send(new CreateOrder_FromDto.Query { OrderDto = orderDto }).ConfigureAwait(false);
+            await _mediator.Send(new CreateOrder_FromDto.Command { OrderDto = orderDto }).ConfigureAwait(false);
         }
         return RedirectToAction("Get", "Order", null);
     }

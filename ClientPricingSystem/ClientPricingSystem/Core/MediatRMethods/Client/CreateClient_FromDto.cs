@@ -9,12 +9,12 @@ using MongoDB.Driver;
 namespace ClientPricingSystem.Core.MediatRMethods.Client;
 public class CreateClient_FromDto
 {
-    public class Query : IRequest<Unit>
+    public class Command : IRequest<Unit>
     { 
         public ClientDto ClientDto { get; set; }
     }
 
-    public class Handler : IRequestHandler<Query, Unit>
+    public class Handler : IRequestHandler<Command, Unit>
     {
         IMongoDatabase _context;
         DatabaseConfiguration _config;
@@ -24,11 +24,11 @@ public class CreateClient_FromDto
             _config = config.Value;
         }
 
-        public async Task<Unit> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
         {
             IMongoCollection<ClientDocument> clientCollection = _context.GetCollection<ClientDocument>(_config.Clients);
 
-            ClientDocument client = ClientMapper.MapClientDto_ClientDocument(query.ClientDto);
+            ClientDocument client = ClientMapper.MapClientDto_ClientDocument(command.ClientDto);
             await clientCollection.InsertOneAsync(client).ConfigureAwait(false);
 
             return Unit.Value;

@@ -33,7 +33,7 @@ public class VendorController : Controller
     {
         if (vendor != null)
         {
-            await _mediator.Send(new CreateVendor_FromDto.Query { VendorDto = vendor }).ConfigureAwait(false);
+            await _mediator.Send(new CreateVendor_FromDto.Command { VendorDto = vendor }).ConfigureAwait(false);
         }
         return RedirectToAction("Get", "Vendor", null);
     }

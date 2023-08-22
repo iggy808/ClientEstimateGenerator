@@ -1,4 +1,4 @@
-namespace ClientPricingSystem.Core.ViewModels;
+namespace ClientPricingSystem.Views.ViewModels;
 public class ErrorViewModel
 {
     public string? RequestId { get; set; }

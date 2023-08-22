@@ -1,20 +1,30 @@
 ﻿using ClientPricingSystem.Configuration.Mapper;
 using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
+using ClientPricingSystem.Core.Methods.Vendor;
 using ClientPricingSystem.Core.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClientPricingSystem.Controllers;
 public class VendorController : Controller
 {
     IVendorService _vendorService;
-    public VendorController(IVendorService vendorService) 
+    IMediator _mediator;
+    public VendorController(IVendorService vendorService, IMediator mediator) 
     {
         _vendorService = vendorService;
+        _mediator = mediator;
     }
     public IActionResult Index()
     {
         return View();
+    }
+
+    public async Task<IActionResult> Get()
+    {
+        VendorDto vendorDto = await _mediator.Send(new GetAllVendors_ToDto.Query()).ConfigureAwait(false);
+        return View(vendorDto);
     }
 
     [HttpGet]
@@ -24,23 +34,12 @@ public class VendorController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(VendorDto vendorDto)
+    public async Task<IActionResult> Create(VendorDto vendor)
     {
-        if (vendorDto != null)
+        if (vendor != null)
         {
-            await _vendorService.CreateVendorAsync(
-                VendorMapper.MapVendorDto_VendorDocument(vendorDto)).ConfigureAwait(false);
+            await _mediator.Send(new CreateVendor_FromDto.Query { VendorDto = vendor }).ConfigureAwait(false);
         }
         return RedirectToAction("Get", "Vendor", null);
-    }
-
-    public async Task<IActionResult> Get()
-    {
-        List<VendorDocument> vendors = await _vendorService.GetAllVendorsAsync().ConfigureAwait(false);
-        VendorDto vendorDto = new VendorDto
-        {
-            Vendors = vendors.Select(v => VendorMapper.MapVendorDocument_VendorDto(v)).ToList()
-        };
-        return View(vendorDto);
     }
 }

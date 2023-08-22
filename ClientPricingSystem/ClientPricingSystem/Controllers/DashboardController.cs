@@ -1,4 +1,4 @@
-﻿using ClientPricingSystem.Core.ViewModels;
+﻿using ClientPricingSystem.Views.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

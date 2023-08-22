@@ -2,6 +2,7 @@ using ClientPricingSystem.Configuration;
 using ClientPricingSystem.Core.Services;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,9 @@ builder.Services.AddSingleton<IMongoClient, MongoClient>(c => new MongoClient(bu
 builder.Services.AddSingleton<IClientService, ClientService>();
 builder.Services.AddSingleton<IOrderService, OrderService>();
 builder.Services.AddSingleton<IVendorService, VendorService>();
+
+// Configure MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();
 

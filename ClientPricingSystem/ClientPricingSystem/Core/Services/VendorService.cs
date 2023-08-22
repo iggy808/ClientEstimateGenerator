@@ -27,4 +27,3 @@ public class VendorService : IVendorService
         await vendors.InsertOneAsync(vendor).ConfigureAwait(false);
     }
 }
-

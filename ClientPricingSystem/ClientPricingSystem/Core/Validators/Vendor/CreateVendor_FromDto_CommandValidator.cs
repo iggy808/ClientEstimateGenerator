@@ -1,7 +1,7 @@
 ﻿using ClientPricingSystem.Core.MediatRMethods.Vendor;
 using FluentValidation;
 
-namespace ClientPricingSystem.Core.Validators;
+namespace ClientPricingSystem.Core.Validators.Vendor;
 public class CreateVendor_FromDto_CommandValidator : AbstractValidator<CreateVendor_FromDto.Command>
 {
     public CreateVendor_FromDto_CommandValidator()

@@ -7,6 +7,6 @@ namespace ClientPricingSystem.Configuration.Mapper;
 [Mapper]
 public static partial class ClientMapper
 {
-    public static partial ClientDto MapCleintDocument_ClientDto(ClientDocument clientDocument);
+    public static partial ClientDto MapClientDocument_ClientDto(ClientDocument clientDocument);
     public static partial ClientDocument MapClientDto_ClientDocument(ClientDto clientDto);
 }

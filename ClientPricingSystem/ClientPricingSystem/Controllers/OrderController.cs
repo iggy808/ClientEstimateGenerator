@@ -1,23 +1,19 @@
-﻿using ClientPricingSystem.Configuration.Mapper;
-using ClientPricingSystem.Core.Documents;
-using ClientPricingSystem.Core.Dtos;
+﻿using ClientPricingSystem.Core.Dtos;
 using ClientPricingSystem.Core.Enums;
-using ClientPricingSystem.Core.Services;
+using ClientPricingSystem.Core.MediatRMethods.Client;
+using ClientPricingSystem.Core.MediatRMethods.Order;
+using ClientPricingSystem.Core.MediatRMethods.Vendor;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ClientPricingSystem.Controllers;
 public class OrderController : Controller
 {
-    IClientService _clientService;
-    IOrderService _orderService;
-    IVendorService _vendorService;
-
-    public OrderController(IOrderService orderService, IClientService clientService, IVendorService vendorService)
+    IMediator _mediator;
+    public OrderController(IMediator mediator)
     {
-        _clientService = clientService;
-        _orderService = orderService;
-        _vendorService = vendorService;
+        _mediator = mediator;
     }
 
     public IActionResult Index()
@@ -27,11 +23,7 @@ public class OrderController : Controller
 
     public async Task<IActionResult> Get()
     {
-        List<OrderDocument> orders = await _orderService.GetAllOrdersAsync().ConfigureAwait(false);
-        OrderDto orderDto = new OrderDto
-        {
-            Orders = orders.Select(o => OrderMapper.MapOrderDocument_OrderDto(o)).ToList(),
-        };
+        OrderDto orderDto = await _mediator.Send(new GetAllOrders_ToDto.Query()).ConfigureAwait(false);
         return View(orderDto);
     }
 
@@ -40,22 +32,21 @@ public class OrderController : Controller
     {
         OrderDto orderDto = new OrderDto
         {
-            Clients = (await _clientService.GetAllClientsAsync().ConfigureAwait(false))
-                .Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() }),
-            Vendors = (await _vendorService.GetAllVendorsAsync().ConfigureAwait(false))
-                .Select(v => new SelectListItem { Text = v.Name, Value = v.Id.ToString() }),
+            Clients = (await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false))
+                .Clients.Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() }),
+            Vendors = (await _mediator.Send(new GetAllVendors_ToDto.Query()).ConfigureAwait(false))
+                .Vendors.Select(v => new SelectListItem { Text = v.Name, Value = v.Id.ToString() }),
             Sizes = Enum.GetNames(typeof(Size)).Select(s => new SelectListItem { Text = s, Value = s})
         };
         return View(orderDto);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(OrderDto order)
+    public async Task<IActionResult> Create(OrderDto orderDto)
     {
-        if (order != null)
+        if (orderDto != null)
         {
-            await _orderService.CreateOrderAsync(
-                OrderMapper.MapOrderDto_OrderDocument(order)).ConfigureAwait(false);
+            await _mediator.Send(new CreateOrder_FromDto.Query { OrderDto = orderDto }).ConfigureAwait(false);
         }
         return RedirectToAction("Get", "Order", null);
     }

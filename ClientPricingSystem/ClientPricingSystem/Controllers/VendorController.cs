@@ -1,19 +1,14 @@
-﻿using ClientPricingSystem.Configuration.Mapper;
-using ClientPricingSystem.Core.Documents;
-using ClientPricingSystem.Core.Dtos;
-using ClientPricingSystem.Core.Methods.Vendor;
-using ClientPricingSystem.Core.Services;
+﻿using ClientPricingSystem.Core.Dtos;
+using ClientPricingSystem.Core.MediatRMethods.Vendor;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClientPricingSystem.Controllers;
 public class VendorController : Controller
 {
-    IVendorService _vendorService;
     IMediator _mediator;
-    public VendorController(IVendorService vendorService, IMediator mediator) 
+    public VendorController(IMediator mediator) 
     {
-        _vendorService = vendorService;
         _mediator = mediator;
     }
     public IActionResult Index()

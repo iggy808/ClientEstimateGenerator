@@ -5,21 +5,20 @@ using ClientPricingSystem.Core.Dtos;
 using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System.Numerics;
 
-namespace ClientPricingSystem.Core.Methods.Vendor;
-
-public class CreateVendor_FromDto
+namespace ClientPricingSystem.Core.MediatRMethods.Order;
+public class CreateOrderItems
 {
     public class Query : IRequest<Unit> 
     {
-        public VendorDto VendorDto { get; set; }
+        public List<OrderItemDocument> Items { get; set; }
+        public Guid? OrderId { get; set; }
     }
 
     public class Handler : IRequestHandler<Query, Unit>
-    { 
-        IMongoDatabase _context { get; set; }
-        DatabaseConfiguration _config { get; set; }
+    {
+        IMongoDatabase _context;
+        DatabaseConfiguration _config;
         public Handler(IMongoClient mongoClient, IOptions<DatabaseConfiguration> config)
         {
             _context = mongoClient.GetDatabase(config.Value.DatabaseName);
@@ -28,10 +27,14 @@ public class CreateVendor_FromDto
 
         public async Task<Unit> Handle(Query query, CancellationToken cancellationToken)
         {
-            IMongoCollection<VendorDocument> vendorCollection = _context.GetCollection<VendorDocument>(_config.Vendors);
+            IMongoCollection<OrderItemDocument> orderItemCollection = _context.GetCollection<OrderItemDocument>(_config.OrderItems);
 
-            VendorDocument vendor = VendorMapper.MapVendorDto_VendorDocument(query.VendorDto);
-            await vendorCollection.InsertOneAsync(vendor).ConfigureAwait(false);
+            if (query.OrderId != null)
+            {
+                query.Items.ForEach(i => i.OrderId = query.OrderId.Value);
+            }
+
+            await orderItemCollection.InsertManyAsync(query.Items).ConfigureAwait(false);
 
             return Unit.Value;
         }

@@ -6,8 +6,7 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ClientPricingSystem.Core.Methods.Vendor;
-
+namespace ClientPricingSystem.Core.MediatRMethods.Vendor;
 public class GetAllVendors_ToDto
 {
     public class Query : IRequest<VendorDto> {}

@@ -1,22 +1,26 @@
-﻿using ClientPricingSystem.Configuration.Mapper;
-using ClientPricingSystem.Core.Documents;
-using ClientPricingSystem.Core.Dtos;
-using ClientPricingSystem.Core.Services;
+﻿using ClientPricingSystem.Core.Dtos;
+using ClientPricingSystem.Core.MediatRMethods.Client;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClientPricingSystem.Controllers;
 public class ClientController : Controller
 {
-    IClientService _clientService;
-
-    public ClientController(IClientService clientService)
+    IMediator _mediator;
+    public ClientController(IMediator mediator)
     {
-        _clientService = clientService;
+        _mediator = mediator;
     }
 
     public IActionResult Index()
     {
         return View();
+    }
+
+    public async Task<IActionResult> Get()
+    {
+        ClientDto clientDto = await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false);
+        return View(clientDto);
     }
 
     [HttpGet]
@@ -30,20 +34,9 @@ public class ClientController : Controller
     {
         if (clientDto != null)
         {
-            await _clientService.CreateClientAsync(
-                ClientMapper.MapClientDto_ClientDocument(clientDto)).ConfigureAwait(false);
+            await _mediator.Send(new CreateClient_FromDto.Query { ClientDto = clientDto }).ConfigureAwait(false);
         }
         return RedirectToAction("Get", "Client", null);
-    }
-
-    public async Task<IActionResult> Get()
-    {
-        List<ClientDocument> clientDocuments = await _clientService.GetAllClientsAsync().ConfigureAwait(false);
-        ClientDto clientDto = new ClientDto
-        {
-            Clients = clientDocuments.Select(c => ClientMapper.MapCleintDocument_ClientDto(c)).ToList()
-        };
-        return View(clientDto);
     }
 }
 

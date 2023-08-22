@@ -10,8 +10,5 @@ public enum Size
     Large,
     XLarge,
     XXLarge,
-    XXXLarge,
-    XXXXLarge,
-    XXXXXLarge,
-    XXXXXXXLarge,
+    XXXLarge
 }

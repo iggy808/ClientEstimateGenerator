@@ -29,11 +29,11 @@ public class VendorController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(VendorDto vendor)
+    public async Task<IActionResult> Create(VendorDto vendorDto)
     {
-        if (vendor != null)
+        if (vendorDto != null)
         {
-            await _mediator.Send(new CreateVendor_FromDto.Command { VendorDto = vendor }).ConfigureAwait(false);
+            await _mediator.Send(new CreateVendor_FromDto.Command { VendorDto = vendorDto }).ConfigureAwait(false);
         }
         return RedirectToAction("Get", "Vendor", null);
     }

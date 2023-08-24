@@ -1,20 +1,21 @@
 ﻿using Fixie;
+using ClientPricingSystem.Configuration;
+using MongoDB.Driver;
+using ClientPricingSystem.Tests.Configuration;
 
 class TestExecution : IExecution
 {
     public async Task Run(TestSuite testSuite)
     {
-        // Iterate over the test *classes* explicitly.
+        IMongoClient mongoClient = new MongoClient(TestDatabase.DefaultConnectionString);
+        IMongoDatabase context = mongoClient.GetDatabase(TestDatabase.DatabaseName);
+
         foreach (var testClass in testSuite.TestClasses)
         {
-            // Construct a shared instance once per test class.
-            //var instance = testClass.Construct();
-
+            var instance = testClass.Construct(context);
             foreach (var test in testClass.Tests)
             {
-                // Provide the shared instance.
-                //await test.Run(instance);
-                await test.Run();
+                await test.Run(instance);
             }
         }
     }

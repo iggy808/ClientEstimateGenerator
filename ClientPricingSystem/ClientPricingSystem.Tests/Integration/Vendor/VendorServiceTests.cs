@@ -2,7 +2,8 @@
 using Shouldly;
 using MongoDB.Driver;
 using ClientPricingSystem.Core.Documents;
-using MongoDB.Bson;
+
+// NOTE: These are placeholder tests/collections
 
 namespace ClientPricingSystem.Tests.Integration.Vendor;
 [IntegrationTestCollection]

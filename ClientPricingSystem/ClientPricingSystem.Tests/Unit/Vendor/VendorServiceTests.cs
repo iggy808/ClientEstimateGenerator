@@ -2,8 +2,9 @@
 using ClientPricingSystem.Tests.Configuration;
 using Shouldly;
 
-namespace ClientPricingSystem.Tests.Unit.Vendor;
+// NOTE: These are placeholder tests/collections
 
+namespace ClientPricingSystem.Tests.Unit.Vendor;
 [UnitTestCollection]
 public class VendorServiceTests
 {

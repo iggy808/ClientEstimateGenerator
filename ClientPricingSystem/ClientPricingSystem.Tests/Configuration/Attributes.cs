@@ -1,5 +1,15 @@
 ﻿namespace ClientPricingSystem.Tests.Configuration;
+
+// Attributes used for unit test discovery and execution
 [AttributeUsage(AttributeTargets.Class)]
-public class TestCollectionAttribute : Attribute { }
+public class UnitTestCollectionAttribute : Attribute { }
+
 [AttributeUsage(AttributeTargets.Method)]
-public class TestMethodAttribute : Attribute { }
+public class UnitTestMethodAttribute : Attribute { }
+
+// Attributes used for integration test discovery and execution
+[AttributeUsage(AttributeTargets.Class)]
+public class IntegrationTestCollectionAttribute : Attribute { }
+
+[AttributeUsage(AttributeTargets.Method)]
+public class IntegrationTestMethodAttribute : Attribute { }

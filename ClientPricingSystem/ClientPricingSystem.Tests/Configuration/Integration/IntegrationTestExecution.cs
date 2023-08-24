@@ -1,9 +1,8 @@
 ﻿using Fixie;
-using ClientPricingSystem.Configuration;
 using MongoDB.Driver;
-using ClientPricingSystem.Tests.Configuration;
 
-class TestExecution : IExecution
+namespace ClientPricingSystem.Tests.Configuration.Integration;
+class IntegrationTestExecution : IExecution
 {
     public async Task Run(TestSuite testSuite)
     {

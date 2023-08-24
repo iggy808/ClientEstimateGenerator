@@ -1,4 +1,5 @@
 ﻿using ClientPricingSystem.Tests.Configuration;
+using ClientPricingSystem.Core;
 using Shouldly;
 
 namespace ClientPricingSystem.Tests.Vendor;

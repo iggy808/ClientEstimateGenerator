@@ -19,17 +19,17 @@
 </head>
 
 <body>
-
     <div class="navbar clear nav-top">
         <div class="row content">
-            <a href="#"><img class="logo" src="DocumentationTemplate/logo.svg"></a>
-            <a class="right" style="text-decoration: underline;" href="#"><i class="fas fa-book"></i>&nbsp; Documentation</a>
+            <a href="index.html"><img class="logo" src="DocumentationTemplate/logo.svg"></a>
+            <a class="right" style="text-decoration: underline;" href="index.html"><i class="fas fa-book"></i>&nbsp; Documentation</a>
             <a class="right" href="mailto:yourapp@email.com" target="_blank"><i class="fas fa-paper-plane"></i>&nbsp; yourapp@email.com</a>
         </div>
     </div>
 
     <div class="container clear">
         <div class="row wrapper">
+            
 
             <div class="sidepanel">
 
@@ -40,12 +40,7 @@
 
                 <div class="divider left"></div>
 
-                <a class="title" href="#settingupdevenv">Setting Up Development Environment</a>
-
-                <a class="section" href="#settingupdevenv">Installing MongoDB</a>
-                <a class="section" href="#runninglocaldb">Running Local MongoDB Instance</a>
-                <a class="section" href="#configureappforlocal">Configuring App For Local Environment</a>
-                <a class="section" href="#basicfeatures">Running the App</a>
+                <a class="title" href="#tableofcontents">Table of Contents</a>
             
              <div class="space double"></div>
 
@@ -93,85 +88,15 @@
                     <li>Shouldly - version 4.2.1</li>
                 </ul>
 
-                <p id="settingupdevenv"></p> 
+                <p id="tableofcontents"></p> 
                  
         <div class="divider" style="width:24%; margin:30px 0;"></div>
 
-                <h1>Setting Up Development Environment</h1>
+                <h1>Table of Contents</h1>
 
-                <h2>Installing MongoDB</h2>
-
-                <p id="settingupdevenv">The following setup steps have been extracted from the MongoDB docs. Link to source <a href="https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-on-windows/">here</a>.</p>
-                
-                <b>MongoDB Download:</b> Click <a href="https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-6.0.9-signed.msi">here</a> to download MongoDB version 6.0.9 installation wizard.
-                <br>
-
-                <h3>Steps</h3>
-                <ol type="1">
-                    <li>Download the installer using the link above.</li>
-                    <li>When download is finished, run the installer.</li>
-                    <li>When asked whether to install a complete or custom MongoDB installation, choose complete.</li>
-                    <li>When asked whether to run MongoDB as a service or not, choose no.</li>
-                    <li>Install MongoDB Compass or MongoShell to interact with database outside of application.</li>
-                    <p id="runninglocaldb"></p>
-                    <b>Note: </b> Instructing MongoDB to not run as a service will prevent the local database from beginning
-                    every time the computer boots up, thus requiring a manual start of the local database whenever the database is needed.<br>
+                <ol>
+                  <li><a class="section" href="localenvironmentsetup.html">Setting Up Local Development Environment</a></li>
                 </ol>
-                
-                <h2>Running Local MongoDB Instance</h2>
-                
-                
-                
-                <h3>Steps</h3>
-
-                <ol type="1">
-                    <li>Create a directory within the C: drive entitled "\data\db".</li>
-                    <li>Add the location of MongoDB 6.0.9's executable file to the system path.</li>
-                    <li>Enter into your terminal the command: "mongod --dbpath="C:\data\db""</li>
-                    <p id="configureappforlocal"></p>
-                    <b>Note: </b> Upon a successful database start, the messages: "Waiting for connections" and ""Listening on","attr":{"address":"ABC.D.E.F"}"should be displayed somewhere within the database startup terminal output.<br>
-                </ol>
-
-                <h2>Configuring App For Local Environment</h2>
-                
-                  <p>In order to configure the application for local development, edit the ConnectionStrings section of the project's appsettings.json file. Example screenshot of appsettings.json below:<br>
-                    <p><img src="Images/Appsettings.PNG"></p>
-                  
-                    <br>Edit the value of the DefaultConnectionString field to be "mongodb://localhost:YourPort", where YourPort is the port where MongoDB is exposed
-                    on your local machine. 
-                    <br><br><b>Note: </b>The exact port can be found alongside the "Waiting for connections" message within the database startup terminal output. Example:
-                    <p><img src="Images/MongoDB_Port.PNG"></p>
-                  </p>
-                
-                <p id="basicfeatures">No further setup beyond changing the connection string to match your machine-specific local port is necessary to configure the application for a local development environment.</p>
-
-                  <h2>Running the App</h2>
-                
-                  <p>In order to build and run the app locally, use either Visual Studio or the dotnet sdk for command line.</p>
-                  <p>If using Visual Studio, simply run the app using the editor's UI.</p>
-                  <h3>Steps To Build/Run App In Command Line</h3>
-                  <ol type="1">
-                    <li>
-                     Navigate to directory containing the ClientPricingSystem.sln file.
-                    </li>
-                    <br>
-                    <li>
-                     Enter into your terminal the command "dotnet build ClientPricingSystem".
-                    </li>
-                    <br>
-                    <li>
-                      If the build succeeded, enter into your terminal the command "dotnet run --project ClientPricingSystem".
-                    </li>
-                    <br>
-                    <li>
-                      Copy either of the addresses that follow the phrase "Now listening on: " from terminal output, and paste into your preferred browser.
-                    </li>
-                    <br>
-                    <li>
-                      The app should be running and responsive in your browser.
-                    </li>
-                    <br>
-                  </ol>
             </div>
         </div>
     </div>

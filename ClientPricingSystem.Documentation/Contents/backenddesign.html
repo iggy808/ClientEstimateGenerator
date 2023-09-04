@@ -44,6 +44,63 @@
 
             <div class="right-col">
                 <h1>Backend Design Guidelines</h1>
+
+                <h2>Design Principles</h2>
+
+                <h3>Testable Code</h3>
+
+                <p>Separation of code is at the core of the backend design, allowing for ease
+                in the process of testing, and the creation of accurate and meaningful tests. FluentValidation
+                and MediatR are two packages that aid in the separation and testability of code, allowing
+                for widespread test coverage that gives accurate insights into the system's current state.
+                It is important to ensure that all tests generate valuable insight into the system, and
+                accurately test every unit of code both positively and negatively.
+                </p>
+
+                <h3>Separation of Documents and Dtos</h3>
+
+                <p>The codebase is designed to handle two forms of data: Document, and Data Transfer Object (DTO).
+                Documents are objects that map directly to the objects retrieved from the database, and DTOs are objects
+                that map to fields needed for the project's views. This separation is in an effort to keep logic that 
+                interacts with database objects separate from controller methods, allowing for the convenient testing of these
+                crucial, Document-oriented methods.
+                </p>
+
+                <h2>Design In Practice</h2>
+
+                <h3>Controllers</h3>
+                
+                <p>Because controllers are difficult to test in .NET, we use controllers strictly to route requests
+                from the frontend to the desired piece of functionality on the backend. We make use of the MediatR package 
+                to succinctly route user requests, minimizing the amount of computation done within controller code.  
+                When developing, avoid using Documents within controller methods. Any method that utilizes a database Document
+                should be placed in a MediatR method for testing. 
+                </p>
+
+                <h3>FluentValidation / MediatR Pipeline</h3>
+
+                <p>The project is configured to handle any MediatR requests in a two-step process, the first being
+                the validation of the incoming request. FluentValidation is a package that allows for the structured validation
+                of data from incoming requests, ensuring the incoming data from a MediatR request is appropriate.
+                Secondly, the request is passed off to the MediatR method for processing.
+                </p>
+
+                <h3>Mappers</h3>
+
+                <p>To aid in the readability of the codebase and minimize room for developer error, mappers are used to
+                map objects from the database to data transfer objects, and vice versa. Mapperly is the package used in 
+                this project to map objects of one type to another. Mapperly's advantage is that all reflection necessary
+                to map the objects is done at compile time, thus minimizing the amount of computation necessary to map objects.
+                Additionally, Mapperly allows for static mappers, which are employed within this codebase. Static mappers allow
+                for the avoidance of using dependency injection for mappers, thus making the code more readable and easy to work with.
+                </p>
+
+                <h3>Creating Meaningful Tests</h3>
+                <p>When testing, ensure that your test does not use Moq or Moq callbacks in any way that avoids
+                testing any feature of the method under test. If a Moq callback is necessary in the test, ensure that the method
+                you are setting up the callback for has already been tested elsewhere. If the method has not been tested elsewhere,
+                create an issue for testing the untested method. 
+                </p>
             </div>
         </div>
     </div>

@@ -42,7 +42,8 @@
 
                 <a class="title" href="#gettingstarted">Setting Up Development Environment</a>
 
-                <a class="section" href="#installingapp">Setting Up Local Database</a>
+                <a class="section" href="#installingapp">Installing MongoDB</a>
+                <a class="section" href="#installingapp">Running Local MongoDB Instance</a>
                 <a class="section" href="#openingapp">Configuring App For Local Environment</a>
                 <a class="section" href="#basicfeatures">Running the App</a>
 
@@ -102,35 +103,35 @@
 
                 <h1>Setting Up Development Environment</h1>
 
-                <h2>This is a sub-header</h2>
-                
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor 
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
-                sunt in culpa qui officia deserunt mollit anim id est laborum.</p> 
+                <h2>Installing MongoDB</h2>
 
-                <p id="installingapp"><b>Important:</b> This line is for an important information.</p>
+                <p id="installingapp">The following setup steps have been extracted from the MongoDB docs. Link to source <a href="https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-on-windows/">here</a>.</p>
                 
-                
-                <h2>Setting Up Local Database</h2>
-                
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                
-                   <ol>
-                    <li>
-                     The first thing you need to do to install this app.
-                    </li>
-                    <br>
-                    <li>
-                    The second thing you need to do to install this app.
-                    </li>
-                    <br id="openingapp">
-                    <li>
-                     The app is installed now.
-                    </li>
-                    <br>
+                <b>MongoDB Download:</b> Click <a href="https://fastdl.mongodb.org/windows/mongodb-windows-x86_64-6.0.9-signed.msi">here</a> to download MongoDB version 6.0.9 installation wizard.
+                <br>
+
+                <h3>Steps</h3>
+
+                <ol type="1">
+                    <li>Download the installer using the link above.</li>
+                    <li>When download is finished, run the installer.</li>
+                    <li>When asked whether to install a complete or custom MongoDB installation, choose complete.</li>
+                    <li>When asked whether to run MongoDB as a service or not, choose no.</li>
+                    <li>Install MongoDB Compass or MongoShell to interact with database outside of application.</li>
+                    <br><b>Note: </b> Choosing not to run MongoDB as a service will prevent your local database from beginning
+                    every time the computer boots up, thus requiring a manual start of the local database whenever the database is needed.<br>
                 </ol>
+
+                <h2>Running Local MongoDB Instance</h2>
                 
+                <h3>Steps</h3>
+
+                <ol type="1">
+                    <li>Create a directory within the C: drive entitled "\data\db".</li>
+                    <li>Add the location of MongoDB 6.0.9's executable file to the system path.</li>
+                    <li>Enter into your terminal the command: "mongod --dbpath="C:\data\db""</li>
+                    <br><b>Note: </b> Upon a successful database start, the messages: "Waiting for connections" and ""Listening on","attr":{"address":"ABC.D.E.F"}"should be displayed somewhere within the database startup terminal output.<br>
+                </ol>
 
                 <h2>Configuring App For Local Environment</h2>
                 

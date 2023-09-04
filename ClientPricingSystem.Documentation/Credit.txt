@@ -1,2 +1,5 @@
 Documentation Template:
 - https://github.com/charlyllo/doctemplate
+
+MongoDB Documentation:
+- https://www.mongodb.com/docs/v6.0/tutorial/install-mongodb-on-windows/

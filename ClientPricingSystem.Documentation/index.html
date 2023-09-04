@@ -135,28 +135,16 @@
 
                 <h2>Configuring App For Local Environment</h2>
                 
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                  <p>In order to configure the application for local development, edit the ConnectionStrings section of the project's appsettings.json file. Example screenshot of appsettings.json below:<br>
+                    <p><img src="Images/Appsettings.PNG"></p>
+                  
+                    <br>Edit the value of the DefaultConnectionString field to be "mongodb://localhost:YourPort", where YourPort is the port where MongoDB is exposed
+                    on your local machine. 
+                    <br><br><b>Note: </b>The exact port can be found alongside the "Waiting for connections" message within the database startup terminal output. Example:
+                    <p><img src="Images/MongoDB_Port.PNG"></p>
+                  </p>
                 
-                 <ol>
-                    <li>
-                     The first thing you need to do to open this app.
-                    </li>
-                    <br>
-                    <li>
-                     The second thing you need to do to open this app.
-                    </li>
-                    <br>
-                    <li>
-                      The third thing you need to do to open this app.
-                    </li>
-                    <br>
-                    <li>
-                     Open the app and start using it!
-                    </li>
-                    <br>
-                </ol>
-                
-                <p id="basicfeatures">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p id="basicfeatures">No further setup beyond changing the connection string to match your machine-specific local port is necessary to configure the application for a local development environment.</p>
 
                   <h2>Running the App</h2>
                 

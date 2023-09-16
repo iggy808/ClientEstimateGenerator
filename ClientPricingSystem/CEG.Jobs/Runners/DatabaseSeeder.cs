@@ -107,6 +107,8 @@ public class DatabaseSeeder
                 subtotal += item.UnitPrice * item.ArticleQuantity;
             }
 
+            subtotal += order.ArtistFee + clients.Where(c => c.Id == order.ClientId).First().MarkupRate;
+
             order.SubTotal = Math.Round(subtotal, 2);
             order.Total = Math.Round(subtotal + TAX, 2);
         }

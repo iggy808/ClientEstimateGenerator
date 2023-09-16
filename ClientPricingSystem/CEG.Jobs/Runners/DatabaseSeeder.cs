@@ -7,30 +7,14 @@ using MongoDB.Driver;
 namespace CEG.Jobs.Runners;
 public class DatabaseSeeder
 {
-    DatabaseConfiguration? _dbConfig;
-    MongoClient? _mongoClient;
-    IMongoDatabase _testDatabase;
-
     const int TestClientRecordsCount = 50;
     const int TestVendorRecordsCount = 10;
     const int TestOrderRecordsCount = 200;
     const decimal TAX = 10.00m;
-    public void EstablishConnectionToDatabase()
-    {
-        IConfigurationRoot jobsConfig = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .AddEnvironmentVariables()
-            .Build();
 
-        DatabaseConfiguration? dbConfig = jobsConfig.GetRequiredSection("DatabaseConfiguration").Get<DatabaseConfiguration>();
-
-        if (dbConfig != null)
-        {
-            dbConfig.DefaultConnectionString = jobsConfig.GetSection("ConnectionStrings").GetValue<string>("DefaultConnectionString");
-            _dbConfig = dbConfig;
-            _mongoClient = new MongoClient(dbConfig.DefaultConnectionString);
-        }
-    }
+    DatabaseConfiguration? _dbConfig;
+    MongoClient? _mongoClient;
+    IMongoDatabase _testDatabase;
 
     public string SeedTestDatabase()
     {
@@ -48,6 +32,23 @@ public class DatabaseSeeder
         SeedOrderCollection();
 
         return "Test database successfully seeded.";
+    }
+
+    public void EstablishConnectionToDatabase()
+    {
+        IConfigurationRoot jobsConfig = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables()
+            .Build();
+
+        DatabaseConfiguration? dbConfig = jobsConfig.GetRequiredSection("DatabaseConfiguration").Get<DatabaseConfiguration>();
+
+        if (dbConfig != null)
+        {
+            dbConfig.DefaultConnectionString = jobsConfig.GetSection("ConnectionStrings").GetValue<string>("DefaultConnectionString");
+            _dbConfig = dbConfig;
+            _mongoClient = new MongoClient(dbConfig.DefaultConnectionString);
+        }
     }
 
     void WipeTestDatabase()
@@ -103,8 +104,10 @@ public class DatabaseSeeder
             foreach (OrderItemDocument item in order.Items)
             {
                 item.OrderId = order.Id;
+                item.Total = item.UnitPrice * item.ArticleQuantity;
+
+                subtotal += item.Total;
                 orderItems.Add(item);
-                subtotal += item.UnitPrice * item.ArticleQuantity;
             }
 
             subtotal += order.ArtistFee + clients.Where(c => c.Id == order.ClientId).First().MarkupRate;

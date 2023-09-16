@@ -107,8 +107,8 @@ public class DatabaseSeeder
                 subtotal += item.UnitPrice * item.ArticleQuantity;
             }
 
-            order.SubTotal = subtotal;
-            order.Total = subtotal + TAX;
+            order.SubTotal = Math.Round(subtotal, 2);
+            order.Total = Math.Round(subtotal + TAX, 2);
         }
 
         orderCollection.InsertMany(orders);

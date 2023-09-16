@@ -8,8 +8,7 @@ public static class VendorFaker
     {
         return new Faker<VendorDocument>()
             .RuleFor(v => v.Name, f => f.Company.CompanyName())
-            .RuleFor(v => v.Domains, f => new List<string> { f.Internet.Url() })
-            .RuleFor(v => v.Notes, f => f.Lorem.Words(7).ToString());
+            .RuleFor(v => v.Domains, f => new List<string> { f.Internet.Url(), f.Internet.Url() })
+            .RuleFor(v => v.Notes, f => String.Join(" ", f.Lorem.Words(7)));
     }
 }
-

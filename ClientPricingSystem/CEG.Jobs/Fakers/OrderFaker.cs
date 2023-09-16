@@ -23,4 +23,3 @@ public static class OrderFaker
             .RuleFor(o => o.Items, f => OrderItemFaker.GetOrderItemFaker(vendors).Generate(3));
     }
 }
-

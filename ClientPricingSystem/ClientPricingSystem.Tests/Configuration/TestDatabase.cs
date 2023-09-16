@@ -1,5 +1,5 @@
 ﻿namespace ClientPricingSystem.Tests.Configuration;
-public class TestDatabase
+public static class TestDatabase
 {
     public static string DefaultConnectionString = "mongodb://localhost:27017";
     public static string DatabaseName = "AUTOTEST";

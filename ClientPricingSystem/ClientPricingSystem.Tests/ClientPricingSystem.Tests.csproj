@@ -17,4 +17,8 @@
     <ProjectReference Include="..\ClientPricingSystem\ClientPricingSystem.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="IntegrationTests\" />
+  </ItemGroup>
+
 </Project>

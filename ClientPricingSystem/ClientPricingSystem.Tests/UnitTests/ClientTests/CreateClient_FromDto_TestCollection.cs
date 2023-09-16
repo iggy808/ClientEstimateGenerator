@@ -4,12 +4,10 @@ using ClientPricingSystem.Core.Dtos;
 using ClientPricingSystem.Core.MediatRMethods.Client;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;
-using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Moq;
 using Shouldly;
-using System.Xml.Linq;
 
 namespace ClientPricingSystem.Tests.UnitTests.ClientTests;
 [UnitTestCollection]
@@ -25,7 +23,6 @@ public class CreateClient_FromDto_TestCollection
     Mock<IMongoClient> _client;
 
     // Test state variables
-    List<ClientDocument> _TestClients;
     ClientDocument _DtoToDocument_MapperResult;
 
     #region Test Preparation Methods
@@ -44,36 +41,22 @@ public class CreateClient_FromDto_TestCollection
         });
 
         _clientCollection = new Mock<IMongoCollection<ClientDocument>>();
+        // Setup callback to record result of mapping the ClientDto object to the ClientDocument object
         _clientCollection.Setup(x =>
             x.InsertOneAsync(
                 It.IsAny<ClientDocument>(),
                 It.IsAny<InsertOneOptions>(),
                 It.IsAny<CancellationToken>()))
-            .Callback((ClientDocument client, InsertOneOptions options, CancellationToken cancellationToken) => AddClientToTestDataset(client));
+            .Callback((ClientDocument client, InsertOneOptions options, CancellationToken cancellationToken) => Record_DtoToDocument_MapperResult(client));
 
         _context = new Mock<IMongoDatabase>();
         _context.Setup(x => x.GetCollection<ClientDocument>(It.IsAny<string>(), null)).Returns(_clientCollection.Object);
 
         _client = new Mock<IMongoClient>();
         _client.Setup(x => x.GetDatabase(It.IsAny<string?>(), null)).Returns(_context.Object);
-
-        if (_TestClients == null)
-            _TestClients = new List<ClientDocument>();
-    }
-
-    void SetupTestData()
-    {
-        _TestClients = ClientFaker
-            .GetClientFaker()
-            .Generate(TestClientRecordCount);
     }
 
     /* Callback Methods */
-    void AddClientToTestDataset(ClientDocument client)
-    {
-        _TestClients.Add(client);
-    }
-
     void Record_DtoToDocument_MapperResult(ClientDocument client) 
     {
         _DtoToDocument_MapperResult = client;
@@ -87,14 +70,6 @@ public class CreateClient_FromDto_TestCollection
         // ARRANGE
         SetupMocks();
 
-        // Setup callback to record result of mapping the ClientDto object to the ClientDocument object
-        _clientCollection.Setup(x =>
-            x.InsertOneAsync(
-                It.IsAny<ClientDocument>(),
-                It.IsAny<InsertOneOptions>(),
-                It.IsAny<CancellationToken>()))
-            .Callback((ClientDocument client, InsertOneOptions options, CancellationToken cancellationToken) => Record_DtoToDocument_MapperResult(client));
-
         ClientDocument newClient = ClientFaker.GetClientFaker().Generate();
         ClientDto newClientDto = new ClientDto
         { 
@@ -103,8 +78,9 @@ public class CreateClient_FromDto_TestCollection
             MarkupRate = newClient.MarkupRate
         };
 
-        // ACT
         CreateClient_FromDto.Handler sut = new CreateClient_FromDto.Handler(_client.Object, _dbConfig);
+
+        // ACT
         var result = sut.Handle(new CreateClient_FromDto.Command{ ClientDto = newClientDto }, default);
 
         // ASSERT

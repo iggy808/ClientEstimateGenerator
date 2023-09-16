@@ -1,0 +1,113 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CEG Jobs</title>
+    <meta name="description" content="A simple HTML/CSS DocumentationTemplate">
+    <meta name="author" content="Carlos Yllobre">
+
+    <link rel="stylesheet" href="../DocumentationTemplate/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Open+Sans:ital,wght@0,400;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
+
+
+</head>
+
+<body>
+    <div class="navbar clear nav-top">
+        <div class="row content">
+            <a href="../index.html"><img class="logo" src="../DocumentationTemplate/logo.svg"></a>
+            <a class="right" style="text-decoration: underline;" href="../index.html"><i class="fas fa-book"></i>&nbsp; Main Page</a>
+            <a class="right" href="mailto:yourapp@email.com" target="_blank"><i class="fas fa-paper-plane"></i>&nbsp; yourapp@email.com</a>
+        </div>
+    </div>
+
+    <div class="container clear">
+        <div class="row wrapper">
+
+            <div class="sidepanel">
+
+              <a class="title" href="../index.html">CEG Documentation</a>
+
+              <div class="divider left"></div>
+                
+              <a class="section" href="localenvironmentsetup.html">Setting Up Local Environment</a>
+              <a class="section" href="backenddesign.html">Backend Design Guidelines</a>
+              <a class="section" href="frontenddesign.html">Frontend Design Guidelines</a>
+              <a class="section" href="jobs.html">Command Line Jobs</a>
+
+              <div class="divider left"></div>
+
+              <a class="title" href="#">Command Line Jobs</a>
+              <a class="section" href="#">Job Structure Overview</a>
+              <a class="section" href="#arguments">Job Argument Format</a>
+              <a class="section" href="#argumentconfig">Configuring And Running Jobs In Visual Studio</a>
+              <a class="title" href="#jobs">Jobs</a>
+              <a class="section" href="#seedtestdb">Seed Test Database</a>
+            
+             <div class="space double"></div>
+
+            </div>
+
+            <div class="right-col">
+                <h1>Command Line Jobs</h1>
+
+                <h2>Job Structure Overview</h2>
+
+                <p id="arguments">There is a .NET command line project within the CEG solution entitled CEG.Jobs. The command
+                line project is incorporated into the CEG infrastructure, and therefore has the ability to access
+                and alter database information, as well as any relevant models, dtos, etc. The purpose of the
+                command line project is to compartmentalize and provide a convenient entry point for logic that
+                is needed either periodically, sparingly, or at will.
+                </p>
+
+                <h3>Job Argument Format</h3>
+
+                <p>Every job must have its own unique job argument, and this unique job identifier must be the first argument
+                issued in the command when triggering the job. Throughout the following documentation, the unique job argument
+                will be written immediately beneath the job name in bold. Unique job arguments follow the form: -jobname (the hypen
+                is part of the command).
+                </p>
+
+                <p>Note: Arguments following the initial job argument are permitted, but implementation of additional arguments 
+                requires additional development and job configuration. 
+                </p>
+
+                <h3>Configuring And Running Jobs In Visual Studio</h3>
+
+                <p id="argumentconfig">In order to run a job, the CEG.Jobs project must be started with a unique job argument passed 
+                as the project's first parameter. This unique job argument must be configured prior to running the job, and Visual
+                Studio provides a UI for providing the job an argument.
+                <br><br>Steps to configure a command line argument from within Visual Studio:
+                </p>
+                  <ol type="1">
+                    <li>Click on the CEG.Jobs project in the solution explorer.</li>
+                    <li>Press Alt+Enter to open the project's properties. Alternatively, right-click the project and select "Properties".</li>
+                    <li>Select "Debug" from the selections on the left side of the project's properites.</li>
+                    <li>Select the hyperlink text reading, "Open debug launch profiles UI".</li>
+                    <li>Select "Debug" from the selections on the left side of the project's properites.</li>
+                    <li>Insert the unique job argument (including single hyphen) into text box beneath the "Command line arguments" header.</li>
+                  </ol>
+
+                <h1>Jobs</h1>
+
+                <h2 id="jobs">Seed Test Database</h2>
+
+                <h3><b>-seedtestdb</b></h3>
+
+                <p id="seedtestdb">The Seed Test Database job drops the database pointed to by the CEG.Jobs appsettings file,
+                and reinstantiates it with fresh, properly related test data. Currently, the job populates the database with 50 clients,
+                10 vendors, 200 orders, and 600 order items. The data is generated using fakers, a core feature of the Bogus package.
+                Bogus is a .NET package focused on generating helpful test data, and makes the generation process highly configurable
+                and efficient.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

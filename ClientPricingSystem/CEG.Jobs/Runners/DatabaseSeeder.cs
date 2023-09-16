@@ -1,4 +1,5 @@
 ﻿using CEG.Jobs.Configuration;
+using CEG.Jobs.Fakers;
 using ClientPricingSystem.Core.Documents;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
@@ -9,6 +10,11 @@ public class DatabaseSeeder
     DatabaseConfiguration? _dbConfig;
     MongoClient? _mongoClient;
     IMongoDatabase _testDatabase;
+
+    const int TestClientRecordsCount = 50;
+    const int TestVendorRecordsCount = 10;
+    const int TestOrderRecordsCount = 200;
+    const decimal TAX = 10.00m;
     public void EstablishConnectionToDatabase()
     {
         IConfigurationRoot jobsConfig = new ConfigurationBuilder()
@@ -55,17 +61,57 @@ public class DatabaseSeeder
 
     void SeedClientCollection()
     {
-        IMongoCollection<ClientDocument> clientCollection = _testDatabase.GetCollection<ClientDocument>(_dbConfig.Clients);
-        clientCollection.InsertOne(new ClientDocument { Name = "LA Tech Soccer", Address = "921 Tech Dr, Ruston, LA 71270", MarkupRate = 60.00m });
+        IMongoCollection<ClientDocument> clientCollection = _testDatabase.GetCollection<ClientDocument>(_dbConfig?.Clients);
+
+        List<ClientDocument> clients = ClientFaker.GetClientFaker().Generate(TestClientRecordsCount);
+
+        clientCollection.InsertMany(clients);
     }
 
     void SeedVendorCollection()
     {
+        IMongoCollection<VendorDocument> vendorCollection = _testDatabase.GetCollection<VendorDocument>(_dbConfig?.Vendors);
 
+        List<VendorDocument> vendors = VendorFaker.GetVendorFaker().Generate(TestVendorRecordsCount);
+
+        vendorCollection.InsertMany(vendors);
     }
 
     void SeedOrderCollection()
     {
+        IMongoCollection<ClientDocument> clientCollection = _testDatabase.GetCollection<ClientDocument>(_dbConfig?.Clients);
+        IMongoCollection<OrderDocument> orderCollection = _testDatabase.GetCollection<OrderDocument>(_dbConfig?.Orders);
+        IMongoCollection<VendorDocument> vendorCollection = _testDatabase.GetCollection<VendorDocument>(_dbConfig?.Vendors);
+        IMongoCollection<OrderItemDocument> orderItemCollection = _testDatabase.GetCollection<OrderItemDocument>(_dbConfig?.OrderItems);
 
+        List<VendorDocument> vendors = vendorCollection.Find(_ => true).ToList();
+        List<ClientDocument> clients = clientCollection.Find(_ => true).ToList();
+
+        List<OrderDocument> orders = OrderFaker
+            .GetOrderFaker(clients, vendors, TestClientRecordsCount)
+            .Generate(TestOrderRecordsCount);
+
+        List<OrderItemDocument> orderItems = new List<OrderItemDocument>();
+        foreach (OrderDocument order in orders)
+        {
+            order.ClientId = order.Client.Id;
+            
+            if (order.Items == null)
+                continue;
+
+            decimal subtotal = 0.00m;
+            foreach (OrderItemDocument item in order.Items)
+            {
+                item.OrderId = order.Id;
+                orderItems.Add(item);
+                subtotal += item.UnitPrice * item.ArticleQuantity;
+            }
+
+            order.SubTotal = subtotal;
+            order.Total = subtotal + TAX;
+        }
+
+        orderCollection.InsertMany(orders);
+        orderItemCollection.InsertMany(orderItems);
     }
 }

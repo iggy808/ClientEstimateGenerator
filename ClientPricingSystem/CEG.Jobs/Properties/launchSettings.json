@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CEG.Jobs": {
+      "commandName": "Project",
+      "commandLineArgs": "-seedtestdb"
+    }
+  }
+}

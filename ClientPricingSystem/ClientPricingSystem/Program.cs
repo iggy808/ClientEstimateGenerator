@@ -1,6 +1,5 @@
 using ClientPricingSystem.Configuration;
 using ClientPricingSystem.Core.PipelineBehaviors;
-using ClientPricingSystem.Core.Services;
 using FluentValidation;
 using MediatR;
 using MongoDB.Bson;
@@ -16,11 +15,6 @@ builder.Services.AddControllersWithViews();
 BsonDefaults.GuidRepresentationMode = GuidRepresentationMode.V3;
 builder.Services.Configure<DatabaseConfiguration>(builder.Configuration.GetSection("DatabaseConfiguration"));
 builder.Services.AddSingleton<IMongoClient, MongoClient>(c => new MongoClient(builder.Configuration.GetConnectionString("DefaultConnectionString")));
-
-// Configure services
-builder.Services.AddSingleton<IClientService, ClientService>();
-builder.Services.AddSingleton<IOrderService, OrderService>();
-builder.Services.AddSingleton<IVendorService, VendorService>();
 
 // Configure MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));

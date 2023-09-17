@@ -1,24 +1,24 @@
 ﻿using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
-using ClientPricingSystem.Core.MediatRMethods.Client;
-using ClientPricingSystem.Core.Validators.Client;
+using ClientPricingSystem.Core.MediatRMethods.Vendor;
+using ClientPricingSystem.Core.Validators.Vendor;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;
 using FluentValidation.Results;
 using Shouldly;
 
-namespace ClientPricingSystem.Tests.ValidationTests.ClientCommandTests;
+namespace ClientPricingSystem.Tests.ValidationTests.VendorCommandTests;
 [ValidationTestCollection]
-public class CreateClient_FromDto_CommandValidation_TestCollection
+public class CreateVendor_FromDto_CommandValidation_TestCollection
 {
-    CreateClient_FromDto_CommandValidator _validator;
+    CreateVendor_FromDto_CommandValidator _validator;
 
     #region Test Configuration Methods
 
     /* Setup Methods */
     void SetupValidator()
     {
-        _validator = new CreateClient_FromDto_CommandValidator();
+        _validator = new CreateVendor_FromDto_CommandValidator();
     }
 
     #endregion
@@ -32,14 +32,14 @@ public class CreateClient_FromDto_CommandValidation_TestCollection
         // ARRANGE
         SetupValidator();
 
-        ClientDocument newClient = ClientFaker.GetClientFaker().Generate();
-        CreateClient_FromDto.Command command = new CreateClient_FromDto.Command
+        VendorDocument newVendor = VendorFaker.GetVendorFaker().Generate();
+        CreateVendor_FromDto.Command command = new CreateVendor_FromDto.Command
         {
-            ClientDto = new ClientDto
+            VendorDto = new VendorDto
             {
-                Name = newClient.Name,
-                Address = newClient.Address,
-                MarkupRate = newClient.MarkupRate
+                Name = newVendor.Name,
+                Domains = newVendor.Domains,
+                Notes = newVendor.Notes
             }
         };
 
@@ -57,13 +57,12 @@ public class CreateClient_FromDto_CommandValidation_TestCollection
         // ARRANGE
         SetupValidator();
 
-        ClientDocument newClient = ClientFaker.GetClientFaker().Generate();
-        CreateClient_FromDto.Command command = new CreateClient_FromDto.Command
+        VendorDocument newVendor = VendorFaker.GetVendorFaker().Generate();
+        CreateVendor_FromDto.Command command = new CreateVendor_FromDto.Command
         {
-            ClientDto = new ClientDto
+            VendorDto = new VendorDto
             {
-                Name = newClient.Name,
-                MarkupRate = newClient.MarkupRate
+                Name = newVendor.Name
             }
         };
 
@@ -77,14 +76,14 @@ public class CreateClient_FromDto_CommandValidation_TestCollection
 
     /* Negative Tests */
     [ValidationTestMethod]
-    public void Validation_SuccessfulWhen_ClientDto_IsNull()
+    public void Validation_SuccessfulWhen_VendorDto_IsNull()
     {
         // ARRANGE
         SetupValidator();
 
-        CreateClient_FromDto.Command command = new CreateClient_FromDto.Command
+        CreateVendor_FromDto.Command command = new CreateVendor_FromDto.Command
         {
-            ClientDto = null
+            VendorDto = null
         };
 
         // ACT
@@ -101,35 +100,11 @@ public class CreateClient_FromDto_CommandValidation_TestCollection
         // ARRANGE
         SetupValidator();
 
-        CreateClient_FromDto.Command command = new CreateClient_FromDto.Command
+        CreateVendor_FromDto.Command command = new CreateVendor_FromDto.Command
         {
-            ClientDto = new ClientDto
+            VendorDto = new VendorDto
             {
-                Name = null,
-                MarkupRate = 0.00m
-            }
-        };
-
-        // ACT
-        ValidationResult validationResult = _validator.Validate(command);
-
-        // ASSERT
-        validationResult.IsValid.ShouldBeFalse();
-        validationResult.Errors.Count.ShouldBe(3);
-    }
-
-    [ValidationTestMethod]
-    public void Validation_SuccessfulWhen_RequiredDtoFields_AreInvalid_Case2()
-    {
-        // ARRANGE
-        SetupValidator();
-
-        CreateClient_FromDto.Command command = new CreateClient_FromDto.Command
-        {
-            ClientDto = new ClientDto
-            {
-                Name = "",
-                MarkupRate = -15.75m
+                Name = null
             }
         };
 
@@ -139,6 +114,28 @@ public class CreateClient_FromDto_CommandValidation_TestCollection
         // ASSERT
         validationResult.IsValid.ShouldBeFalse();
         validationResult.Errors.Count.ShouldBe(2);
+    }
+
+    [ValidationTestMethod]
+    public void Validation_SuccessfulWhen_RequiredDtoFields_AreInvalid_Case2()
+    {
+        // ARRANGE
+        SetupValidator();
+
+        CreateVendor_FromDto.Command command = new CreateVendor_FromDto.Command
+        {
+            VendorDto = new VendorDto
+            {
+                Name = "",
+            }
+        };
+
+        // ACT
+        ValidationResult validationResult = _validator.Validate(command);
+
+        // ASSERT
+        validationResult.IsValid.ShouldBeFalse();
+        validationResult.Errors.Count.ShouldBe(1);
     }
 
     #endregion

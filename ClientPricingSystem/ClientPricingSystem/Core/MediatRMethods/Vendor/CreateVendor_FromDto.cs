@@ -29,6 +29,9 @@ public class CreateVendor_FromDto
             IMongoCollection<VendorDocument> vendorCollection = _context.GetCollection<VendorDocument>(_config.Vendors);
 
             VendorDocument vendor = VendorMapper.MapVendorDto_VendorDocument(command.VendorDto);
+            if (command.VendorDto.Domains != null)
+                vendor.Domains = command.VendorDto.Domains;
+            
             await vendorCollection.InsertOneAsync(vendor).ConfigureAwait(false);
 
             return Unit.Value;

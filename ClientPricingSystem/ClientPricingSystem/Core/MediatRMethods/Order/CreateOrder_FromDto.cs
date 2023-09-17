@@ -2,6 +2,7 @@
 using ClientPricingSystem.Configuration.Mapper;
 using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
+using ClientPricingSystem.Core.MediatRMethods.Order.OrderItem;
 using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -33,6 +34,11 @@ public class CreateOrder_FromDto
             IMongoCollection<OrderDocument> orderCollection = _context.GetCollection<OrderDocument>(_config.Orders);
 
             OrderDocument order = OrderMapper.MapOrderDto_OrderDocument(command.OrderDto);
+
+            // If the incoming request's Items field is populated, no json deserialization of order item input is required.
+            //    => Map order items to the incoming request's items (Need to test this)
+            if (command.OrderDto.Items != null)
+                order.Items = command.OrderDto.Items;
 
             // Manually assign new ID (needed for mapping OrderItems documents to this order)
             order.Id = Guid.NewGuid();

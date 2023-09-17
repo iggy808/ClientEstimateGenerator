@@ -11,10 +11,10 @@ public class CreateClient_FromDto_CommandValidator : AbstractValidator<CreateCli
             .DependentRules(() =>
             {
                 RuleFor(x => x.ClientDto.Name)
-                    .NotEmpty().NotNull();
+                    .NotNull().NotEmpty();
 
                 RuleFor(x => x.ClientDto.MarkupRate)
-                    .NotEmpty().NotNull();
+                    .NotNull().GreaterThan(0.00m);
             });
     }
 }

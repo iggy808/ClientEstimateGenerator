@@ -10,5 +10,6 @@ public static partial class OrderMapper
     public static partial OrderDto MapOrderDocument_OrderDto(OrderDocument orderDocument);
     [MapProperty(nameof(OrderDto.ItemsJson), nameof(OrderDocument.Items))]
     public static partial OrderDocument MapOrderDto_OrderDocument(OrderDto orderDto);
-    public static List<OrderItemDocument>? ItemsJsonToItems(string itemsJson) => JsonConvert.DeserializeObject<List<OrderItemDocument>?>(itemsJson);
+    public static List<OrderItemDocument>? ItemsJsonToItems(string? itemsJson) =>
+        string.IsNullOrEmpty(itemsJson) ? new List<OrderItemDocument>() : JsonConvert.DeserializeObject<List<OrderItemDocument>?>(itemsJson);
 }

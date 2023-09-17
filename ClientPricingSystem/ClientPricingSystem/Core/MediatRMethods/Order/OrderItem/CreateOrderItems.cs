@@ -4,10 +4,10 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ClientPricingSystem.Core.MediatRMethods.Order;
+namespace ClientPricingSystem.Core.MediatRMethods.Order.OrderItem;
 public class CreateOrderItems
 {
-    public class Command : IRequest<Unit> 
+    public class Command : IRequest<Unit>
     {
         public List<OrderItemDocument> Items { get; set; }
         public Guid OrderId { get; set; }

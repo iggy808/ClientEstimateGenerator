@@ -7,9 +7,11 @@ public class CreateVendor_FromDto_CommandValidator : AbstractValidator<CreateVen
     public CreateVendor_FromDto_CommandValidator()
     {
         RuleFor(x => x.VendorDto)
-            .NotNull();
-
-        RuleFor(x => x.VendorDto.Name)
-            .NotEmpty().NotNull();
+            .NotNull()
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.VendorDto.Name)
+                    .NotEmpty().NotNull();
+            });
     }
 }

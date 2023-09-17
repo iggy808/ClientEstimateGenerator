@@ -2,10 +2,8 @@
 using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
 using ClientPricingSystem.Core.MediatRMethods.Client;
-using ClientPricingSystem.Core.Validators.Client;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;
-using FluentValidation.Results;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Moq;

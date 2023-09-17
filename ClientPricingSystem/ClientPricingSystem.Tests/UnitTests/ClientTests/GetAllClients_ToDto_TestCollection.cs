@@ -142,6 +142,7 @@ public class GetAllClients_ToDto_TestCollection
         //_DtoToDocument_MapperResult.Name.ShouldBe(newClientDto.Name);
         //_DtoToDocument_MapperResult.MarkupRate.ShouldBe(newClientDto.MarkupRate);
         //_DtoToDocument_MapperResult.Address.ShouldBeNull();
+        1.ShouldBe(2);
     }
 
     #endregion

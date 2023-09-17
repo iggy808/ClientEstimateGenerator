@@ -19,6 +19,6 @@ public class OrderDto
     public IEnumerable<SelectListItem> Sizes { get; set; }
     public IEnumerable<SelectListItem> Vendors { get; set; }
     public OrderItemDocument Item { get; set; }
-    public string ItemsJson { get; set; }
+    public string? ItemsJson { get; set; }
 }
 

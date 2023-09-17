@@ -50,14 +50,16 @@ public class CreateOrder_FromDto
             if (order.Items != null)
             {
                 // Create order items
-                await _mediator.Send(new CreateOrderItems.Command { Items = order.Items, OrderId = order.Id }).ConfigureAwait(false);
+                await _mediator.Send(new CreateOrderItems.Command { Order = order }).ConfigureAwait(false);
 
                 // Calculate order totals
                 foreach (OrderItemDocument item in order.Items)
                 {
-                    // Need to determine how to calculate totals from business
-                    //itemsTotal += item.ArticleQuantity * item.UnitPrice;
-                    itemsTotal += item.Total;
+                    // Need to determine how to calculate totals from business\
+                    /* THIS IS TEST CODE, front end current only has option 
+                     * for total, but would like 
+                     * article quantity */ item.UnitPrice = item.Total;
+                    itemsTotal += item.ArticleQuantity * item.UnitPrice;
                 }
             }
 

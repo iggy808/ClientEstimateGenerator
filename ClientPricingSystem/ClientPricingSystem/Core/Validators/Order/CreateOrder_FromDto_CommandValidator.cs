@@ -10,9 +10,11 @@ public class CreateOrder_FromDto_CommandValidator : AbstractValidator<CreateOrde
             .NotNull()
             .DependentRules(() =>
             {
+                
                 RuleFor(x => x.OrderDto.ClientId)
                     .NotNull().NotEqual(Guid.Empty);
-
+                
+                
                 RuleFor(x => x.OrderDto.ArtistFee)
                     .NotNull().GreaterThan(0.00m);
 

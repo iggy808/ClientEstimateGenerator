@@ -6,15 +6,20 @@ public class CreateOrderItems_CommandValidator : AbstractValidator<CreateOrderIt
 {
     public CreateOrderItems_CommandValidator()
     {
-        RuleFor(x => x.Items)
-            .NotNull().NotEmpty()
+        RuleFor(x => x.Order)
+            .NotNull()
             .DependentRules(() =>
             {
-                RuleFor(x => x.Items.Sum(i => i.ArticleQuantity * i.UnitPrice))
-                    .GreaterThan(0.00m);
-            });
+                RuleFor(x => x.Order.Id)
+                    .NotNull().NotEqual(Guid.Empty);
 
-        RuleFor(x => x.OrderId)
-            .NotNull().NotEqual(Guid.Empty);
+                RuleFor(x => x.Order.Items)
+                .NotNull().NotEmpty()
+                .DependentRules(() =>
+                {
+                    RuleFor(x => x.Order.Items.Sum(i => i.ArticleQuantity * i.UnitPrice))
+                        .GreaterThan(0.00m);
+                });
+            });
     }
 }

@@ -15,7 +15,7 @@
                 <th>Item ArticleQuantity</th>
                 <th>Item Size</th>
                 <th>Item VendorId</th>
-                <th>Item Total</th>
+                <th>Item Unit Price</th>
             </tr>
         </thead>
         <tbody id="orderItems">
@@ -30,7 +30,7 @@
                     @Html.DropDownListFor(m => m.Item.VendorId, Model.Vendors, "Select vendor...", new { id="item0_VendorId"})
                 </td>
                 <td>
-                    <input data-val="true" data-val-number="The field Total must be a number." data-val-required="The Total field is required." id="item0_Total" name="Item.Total" type="text" value="">
+                    <input data-val="true" data-val-number="The field Unit Price must be a number." data-val-required="The Unit Price field is required." id="item0_UnitPrice" name="Item.UnitPrice" type="text" value="">
                 </td>
             </tr>
         </tbody>
@@ -60,7 +60,7 @@
         function getOrderItems() {
             var itemsJson = "[";
             for (var i = 0; i <= itemInputsIndex; i++) {
-                itemsJson += "{\"VendorId\": \"" + document.getElementById("item" + i + "_VendorId").value + "\", \"Size\": \"" + document.getElementById("item" + i + "_Size").value + "\", \"ArticleQuantity\": \"" + document.getElementById("item" + i + "_ArticleQuantity").value + "\", \"Total\": \"" + document.getElementById("item" + i + "_Total").value + "\"}";
+                itemsJson += "{\"VendorId\": \"" + document.getElementById("item" + i + "_VendorId").value + "\", \"Size\": \"" + document.getElementById("item" + i + "_Size").value + "\", \"ArticleQuantity\": \"" + document.getElementById("item" + i + "_ArticleQuantity").value + "\", \"UnitPrice\": \"" + document.getElementById("item" + i + "_UnitPrice").value + "\"}";
                 if (itemInputsIndex > 0) { 
                     itemsJson += ", ";
                 }
@@ -103,7 +103,7 @@
                 var newRowId = (i-1).toString();
                 document.getElementById("item" + i + "_VendorId").id = "item" + newRowId + "_VendorId";
                 document.getElementById("item" + i + "_Size").id = "item" + newRowId + "_Size";
-                document.getElementById("item" + i + "_Total").id = "item" + newRowId + "_Total";
+                document.getElementById("item" + i + "_UnitPrice").id = "item" + newRowId + "_UnitPrice";
                 document.getElementById("item" + i + "_ArticleQuantity").id = "item" + newRowId + "_ArticleQuantity";
             }
         }
@@ -142,8 +142,8 @@
                 "< /select>";
 
             var newItemInput_TotalHTML =
-                "<input data-val='true' data-val-required='The ArticleQuantity field is required.' id='item" + itemInputsIndex +
-                "_Total' name='Item.Total' type='text' value=''>";
+                "<input data-val='true' data-val-required='The UnitPrice field is required.' id='item" + itemInputsIndex +
+                "_Total' name='Item.UnitPrice' type='text' value=''>";
 
             var newItemInput_RemoveButtonHTML = "<input value=\"remove item\" onclick=\"removeOrderItem(this)\" type=\"button\">";
 

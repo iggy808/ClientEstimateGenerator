@@ -35,8 +35,7 @@ public class CreateOrderItems_CommandValidation_TestCollection
         OrderDocument newOrder = OrderFaker.GetOrderFaker().Generate();
         CreateOrderItems.Command command = new CreateOrderItems.Command
         {
-            Items = newOrder.Items,
-            OrderId = newOrder.Id
+            Order = newOrder
         };
 
         // ACT
@@ -63,8 +62,7 @@ public class CreateOrderItems_CommandValidation_TestCollection
 
         CreateOrderItems.Command command = new CreateOrderItems.Command
         {
-            Items = newOrder.Items,
-            OrderId = newOrder.Id
+            Order = newOrder
         };
 
         // ACT
@@ -81,11 +79,13 @@ public class CreateOrderItems_CommandValidation_TestCollection
         // ARRANGE
         SetupValidator();
 
-        OrderDocument newOrder = OrderFaker.GetOrderFaker().Generate();
         CreateOrderItems.Command command = new CreateOrderItems.Command
         {
-            Items = newOrder.Items,
-            OrderId = Guid.Empty
+            Order = new OrderDocument
+            { 
+                Id = Guid.Empty,
+                Items = OrderItemFaker.GetOrderItemFaker().Generate(2)
+            }
         };
 
         // ACT
@@ -102,11 +102,13 @@ public class CreateOrderItems_CommandValidation_TestCollection
         // ARRANGE
         SetupValidator();
 
-        OrderDocument newOrder = OrderFaker.GetOrderFaker().Generate();
         CreateOrderItems.Command command = new CreateOrderItems.Command
         {
-            OrderId = newOrder.Id,
-            Items = null
+            Order = new OrderDocument
+            {
+                Id = Guid.NewGuid(),
+                Items = null
+            }
         };
 
         // ACT
@@ -123,11 +125,13 @@ public class CreateOrderItems_CommandValidation_TestCollection
         // ARRANGE
         SetupValidator();
 
-        OrderDocument newOrder = OrderFaker.GetOrderFaker().Generate();
         CreateOrderItems.Command command = new CreateOrderItems.Command
         {
-            OrderId = newOrder.Id,
-            Items = new List<OrderItemDocument>()
+            Order = new OrderDocument
+            {
+                Id = Guid.NewGuid(),
+                Items = new List<OrderItemDocument>()
+            }
         };
 
         // ACT

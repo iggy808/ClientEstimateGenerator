@@ -9,8 +9,7 @@ public class CreateOrderItems
 {
     public class Command : IRequest<Unit>
     {
-        public List<OrderItemDocument> Items { get; set; }
-        public Guid OrderId { get; set; }
+        public OrderDocument Order { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, Unit>
@@ -25,10 +24,10 @@ public class CreateOrderItems
 
         public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
         {
-            command.Items.ForEach(i => i.OrderId = command.OrderId);
+            command.Order.Items.ForEach(i => i.OrderId = command.Order.Id);
 
             IMongoCollection<OrderItemDocument> orderItemCollection = _context.GetCollection<OrderItemDocument>(_config.OrderItems);
-            await orderItemCollection.InsertManyAsync(command.Items).ConfigureAwait(false);
+            await orderItemCollection.InsertManyAsync(command.Order.Items).ConfigureAwait(false);
 
             return Unit.Value;
         }

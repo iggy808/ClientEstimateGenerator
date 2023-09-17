@@ -11,7 +11,7 @@ public class CreateClient_FromDto
 {
     public class Command : IRequest<Unit>
     { 
-        public ClientDto ClientDto { get; set; }
+        public ClientDto? ClientDto { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, Unit>

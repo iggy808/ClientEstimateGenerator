@@ -7,12 +7,14 @@ public class CreateClient_FromDto_CommandValidator : AbstractValidator<CreateCli
     public CreateClient_FromDto_CommandValidator()
     {
         RuleFor(x => x.ClientDto)
-            .NotNull();
+            .NotNull()
+            .DependentRules(() =>
+            {
+                RuleFor(x => x.ClientDto.Name)
+                    .NotEmpty().NotNull();
 
-        RuleFor(x => x.ClientDto.Name)
-            .NotEmpty().NotNull();
-
-        RuleFor(x => x.ClientDto.MarkupRate)
-            .NotEmpty().NotNull();
+                RuleFor(x => x.ClientDto.MarkupRate)
+                    .NotEmpty().NotNull();
+            });
     }
 }

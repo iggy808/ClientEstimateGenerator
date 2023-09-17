@@ -25,7 +25,7 @@ public class CreateClient_FromDto_CommandValidation_TestCollection
 
     #region Validator Tests
 
-    // Positive Tests
+    /* Positive Tests */
     [ValidationTestMethod]
     public void Validation_SuccessfulWhen_AllDtoFields_AreValid()
     {
@@ -75,7 +75,7 @@ public class CreateClient_FromDto_CommandValidation_TestCollection
         validationResult.Errors.Count.ShouldBe(0);
     }
 
-    // Negative Tests
+    /* Negative Tests */
     [ValidationTestMethod]
     public void Validation_SuccessfulWhen_ClientDto_IsNull()
     {

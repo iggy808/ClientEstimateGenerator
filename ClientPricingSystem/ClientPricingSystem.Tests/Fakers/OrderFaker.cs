@@ -9,7 +9,6 @@ public static class OrderFaker
         if (clients == null)
             clients = ClientFaker.GetClientFaker().Generate(TestClientRecordsCount);
         
-
         if (vendors == null)
             vendors = VendorFaker.GetVendorFaker().Generate(TestVendorRecordsCount);
         

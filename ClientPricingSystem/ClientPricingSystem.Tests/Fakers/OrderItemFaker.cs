@@ -16,6 +16,7 @@ public static class OrderItemFaker
         List<Size> sizes = Enum.GetValues<Size>().ToList();
 
         return new Faker<OrderItemDocument>()
+            .RuleFor(i => i.Id, f => f.Random.Uuid())
             .RuleFor(i => i.ArticleQuantity, f => f.Random.Int(1, 17) * 12)
             .RuleFor(i => i.UnitPrice, f => Math.Round(f.Random.Decimal(0.25m, 2.66m), 3))
             .RuleFor(i => i.Size, f => sizes.ElementAt(f.Random.Int(0, sizes.Count - 1)))

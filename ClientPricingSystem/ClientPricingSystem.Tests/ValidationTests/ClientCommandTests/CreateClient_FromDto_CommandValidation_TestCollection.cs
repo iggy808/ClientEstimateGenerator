@@ -23,7 +23,7 @@ public class CreateClient_FromDto_CommandValidation_TestCollection
 
     #endregion
 
-    #region Command Tests
+    #region Validator Tests
 
     // Positive Tests
     [ValidationTestMethod]

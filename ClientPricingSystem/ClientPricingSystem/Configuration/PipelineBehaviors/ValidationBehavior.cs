@@ -2,7 +2,7 @@
 using MediatR;
 using System.Text;
 
-namespace ClientPricingSystem.Core.PipelineBehaviors;
+namespace ClientPricingSystem.Configuration.PipelineBehaviors;
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
@@ -20,7 +20,7 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
         var context = new ValidationContext<TRequest>(request);
         var failures = _validators.Select(x => x.Validate(context)).SelectMany(x => x.Errors).Where(x => x != null).ToList();
-        
+
         if (failures.Any())
         {
             StringBuilder stringBuilder = new StringBuilder();

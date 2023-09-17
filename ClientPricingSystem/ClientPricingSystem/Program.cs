@@ -1,5 +1,5 @@
 using ClientPricingSystem.Configuration;
-using ClientPricingSystem.Core.PipelineBehaviors;
+using ClientPricingSystem.Configuration.PipelineBehaviors;
 using ClientPricingSystem.Core.Services;
 using FluentValidation;
 using MediatR;

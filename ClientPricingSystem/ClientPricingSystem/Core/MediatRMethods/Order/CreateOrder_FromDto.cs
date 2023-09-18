@@ -36,7 +36,7 @@ public class CreateOrder_FromDto
             OrderDocument order = OrderMapper.MapOrderDto_OrderDocument(command.OrderDto);
 
             // If the incoming request's Items field is populated, no json deserialization of order item input is required.
-            //    => Map order items to the incoming request's items (Need to test this)
+            //    => Map order items to the incoming request's items
             if (command.OrderDto.Items != null)
                 order.Items = command.OrderDto.Items;
 
@@ -44,7 +44,7 @@ public class CreateOrder_FromDto
             order.Id = Guid.NewGuid();
 
             // Fetch and store client in OrderDocument
-            order.Client = clientCollection.Find(Builders<ClientDocument>.Filter.Eq(c => c.Id, order.ClientId)).FirstOrDefault();
+            order.Client = clientCollection.Find(Builders<ClientDocument>.Filter.Eq(c => c.Id, order.ClientId)).First();
 
             decimal itemsTotal = 0.00m;
             if (order.Items != null)
@@ -58,7 +58,7 @@ public class CreateOrder_FromDto
                     // Need to determine how to calculate totals from business\
                     /* THIS IS TEST CODE, front end current only has option 
                      * for total, but would like 
-                     * article quantity */ item.UnitPrice = item.Total;
+                     * article quantity */ //item.UnitPrice = item.Total;
                     itemsTotal += item.ArticleQuantity * item.UnitPrice;
                 }
             }

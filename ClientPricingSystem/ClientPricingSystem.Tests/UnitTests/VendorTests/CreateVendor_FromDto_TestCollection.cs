@@ -1,7 +1,9 @@
-﻿using ClientPricingSystem.Configuration;
+﻿using Bogus;
+using ClientPricingSystem.Configuration;
 using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
 using ClientPricingSystem.Core.MediatRMethods.Vendor;
+using ClientPricingSystem.Core.Validators.Vendor;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;
 using Microsoft.Extensions.Options;
@@ -61,6 +63,17 @@ public class CreateVendor_FromDto_TestCollection
 
     #endregion
 
+    #region Test Helper Methods
+
+    bool ValidateTestCommand(CreateVendor_FromDto.Command command)
+    {
+        CreateVendor_FromDto_CommandValidator validator = new CreateVendor_FromDto_CommandValidator();
+        FluentValidation.Results.ValidationResult validationResult = validator.Validate(command);
+        return validationResult.IsValid;
+    }
+
+    #endregion
+
     #region Method Tests
 
     [UnitTestMethod]
@@ -78,6 +91,15 @@ public class CreateVendor_FromDto_TestCollection
         };
 
         CreateVendor_FromDto.Handler sut = new CreateVendor_FromDto.Handler(_client.Object, _dbConfig);
+
+        CreateVendor_FromDto.Command command = new CreateVendor_FromDto.Command
+        {
+            VendorDto = newVendorDto
+        };
+
+        //Validate test command
+        if (!ValidateTestCommand(command))
+            throw new ValidationException("Test command is not valid.");
 
         // ACT
         var result = sut.Handle(new CreateVendor_FromDto.Command{ VendorDto = newVendorDto }, default);
@@ -111,6 +133,15 @@ public class CreateVendor_FromDto_TestCollection
 
         CreateVendor_FromDto.Handler sut = new CreateVendor_FromDto.Handler(_client.Object, _dbConfig);
 
+        CreateVendor_FromDto.Command command = new CreateVendor_FromDto.Command
+        {
+            VendorDto = newVendorDto
+        };
+
+        //Validate test command
+        if (!ValidateTestCommand(command))
+            throw new ValidationException("Test command is not valid.");
+
         // ACT
         var result = sut.Handle(new CreateVendor_FromDto.Command { VendorDto = newVendorDto }, default);
 
@@ -143,6 +174,15 @@ public class CreateVendor_FromDto_TestCollection
         };
 
         CreateVendor_FromDto.Handler sut = new CreateVendor_FromDto.Handler(_client.Object, _dbConfig);
+
+        CreateVendor_FromDto.Command command = new CreateVendor_FromDto.Command
+        {
+            VendorDto = newVendorDto
+        };
+
+        //Validate test command
+        if (!ValidateTestCommand(command))
+            throw new ValidationException("Test command is not valid.");
 
         // ACT
         var result = sut.Handle(new CreateVendor_FromDto.Command { VendorDto = newVendorDto }, default);

@@ -1,19 +1,15 @@
 ﻿using Bogus;
-using Bogus.DataSets;
 using ClientPricingSystem.Configuration;
 using ClientPricingSystem.Configuration.Mapper;
 using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
 using ClientPricingSystem.Core.MediatRMethods.Order;
-using ClientPricingSystem.Core.MediatRMethods.Order.OrderItem;
+using ClientPricingSystem.Core.Validators.Order;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;
-using ClientPricingSystem.Tests.Helpers;
 using MediatR;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Operations;
 using Moq;
 using Newtonsoft.Json;
 using Shouldly;
@@ -22,7 +18,9 @@ namespace ClientPricingSystem.Tests.UnitTests.OrderTests;
 [UnitTestCollection]
 public class CreateOrder_FromDto_TestCollection
 {
+    // Test constants
     const decimal TAX = 400.00m;
+
     // Test setup variables
     IOptions<DatabaseConfiguration> _dbConfig;
     Mock<IMongoCollection<OrderDocument>> _orderCollection;
@@ -32,12 +30,9 @@ public class CreateOrder_FromDto_TestCollection
     Mock<IMongoClient> _client;
     Mock<IMediator> _mediator;
 
-    List<ClientDocument> _testClientDataset;
-
     // Test state variables
-    OrderDto _NewOrderDto;
+    List<ClientDocument> _testClientDataset;
     OrderDocument _NewOrder;
-    List<OrderItemDocument> _NewOrderItems;
 
     #region Test Configuration Methods
 
@@ -96,15 +91,47 @@ public class CreateOrder_FromDto_TestCollection
 
     #region Test Helper Methods
 
-    ClientDocument GetClientFromId(Guid clientId)
+    bool ValidateTestCommand(CreateOrder_FromDto.Command command)
     {
-        return _testClientDataset.First(c => c.Id == clientId);
+        CreateOrder_FromDto_CommandValidator validator = new CreateOrder_FromDto_CommandValidator();
+        FluentValidation.Results.ValidationResult validationResult = validator.Validate(command);
+        return validationResult.IsValid;
+    }
+
+    void VerifyNewOrderMatchesIncomingOrder(OrderDocument newOrder_preProcessing)
+    {
+        _NewOrder.SubTotal.ShouldBe(
+            newOrder_preProcessing.Items.Sum(i => i.ArticleQuantity * i.UnitPrice)
+            + newOrder_preProcessing.ArtistFee
+            + newOrder_preProcessing.Client.MarkupRate);
+        _NewOrder.Total.ShouldBe(_NewOrder.SubTotal + TAX);
+        _NewOrder.Client.MarkupRate.ShouldBe(newOrder_preProcessing.Client.MarkupRate);
+        _NewOrder.Client.Name.ShouldBe(newOrder_preProcessing.Client.Name);
+        _NewOrder.Client.Address.ShouldBe(newOrder_preProcessing.Client.Address);
+        _NewOrder.Client.Id.ShouldBe(newOrder_preProcessing.Client.Id);
+        _NewOrder.ClientId.ShouldBe(_NewOrder.Client.Id);
+    }
+
+    void VerifyOrderMapperBehavior(OrderDto source, OrderDocument mapperResult)
+    {
+        mapperResult.ClientId.ShouldBe(source.ClientId);
+        mapperResult.ArtistFee.ShouldBe(source.ArtistFee);
+        if (!string.IsNullOrEmpty(source.ItemsJson))
+        {
+            mapperResult.Items.ShouldNotBeNull().ShouldNotBeEmpty();
+        }
+        else
+        {
+            mapperResult.Items.ShouldBeEmpty();
+            mapperResult.Items.Sum(i => i.ArticleQuantity * i.UnitPrice).ShouldBe(0.00m);
+        }
     }
 
     #endregion
 
     #region Method Tests
     
+    /* Positive Tests */
     [UnitTestMethod]
     public void SuccessfulWhen_ItemsJson_IsPopulatedAndValid()
     {
@@ -117,15 +144,19 @@ public class CreateOrder_FromDto_TestCollection
             ItemsJson = JsonConvert.SerializeObject(newOrder_preProcessing.Items)
         };
 
-        _NewOrderDto = newOrderDto;
         _testClientDataset = new List<ClientDocument> { newOrder_preProcessing.Client };
 
         SetupMocks();
-
+        
         CreateOrder_FromDto.Handler sut = new CreateOrder_FromDto.Handler(_client.Object, _dbConfig, _mediator.Object);
+        CreateOrder_FromDto.Command command = new CreateOrder_FromDto.Command { OrderDto = newOrderDto };
+
+        //Validate test command
+        if (!ValidateTestCommand(command))
+            throw new ValidationException("Test command is not valid.");
 
         // ACT
-        var result = sut.Handle(new CreateOrder_FromDto.Command { OrderDto = newOrderDto }, default);
+        var result = sut.Handle(command, default);
         OrderDocument mapperResult = OrderMapper.MapOrderDto_OrderDocument(newOrderDto);
 
         // ASSERT
@@ -138,16 +169,53 @@ public class CreateOrder_FromDto_TestCollection
             Times.Once());
 
         // Verify mapper logic worked appropriately with json
-        decimal mapperResult_itemsTotalPrice = mapperResult.Items.Sum(i => i.ArticleQuantity * i.UnitPrice);
+        VerifyOrderMapperBehavior(newOrderDto, mapperResult);
 
-        mapperResult.ClientId.ShouldBe(newOrder_preProcessing.ClientId);
-        mapperResult.ArtistFee.ShouldBe(newOrder_preProcessing.ArtistFee);
-        mapperResult.Items.ShouldNotBeNull().ShouldNotBeEmpty();
-        mapperResult_itemsTotalPrice.ShouldBe(newOrder_preProcessing.Items.Sum(i => i.ArticleQuantity * i.UnitPrice));
-        mapperResult_itemsTotalPrice.ShouldBeGreaterThan(0.00m);
+        // Verify stored order's fields match the incoming dto's and are appropriate
+        VerifyNewOrderMatchesIncomingOrder(newOrder_preProcessing);
+    }
 
-        _NewOrder.SubTotal.ShouldBe(newOrder_preProcessing.Items.Sum(i => i.ArticleQuantity * i.UnitPrice) + newOrder_preProcessing.ArtistFee + newOrder_preProcessing.Client.MarkupRate);
-        _NewOrder.Total.ShouldBe(_NewOrder.SubTotal + TAX);
+    [UnitTestMethod]
+    public void SuccessfulWhen_Items_IsPopulatedAndValid()
+    {
+        // ARRANGE
+        OrderDocument newOrder_preProcessing = OrderFaker.GetOrderFaker().Generate();
+        OrderDto newOrderDto = new OrderDto
+        {
+            ClientId = newOrder_preProcessing.ClientId,
+            ArtistFee = newOrder_preProcessing.ArtistFee,
+            Items = newOrder_preProcessing.Items
+        };
+
+        _testClientDataset = new List<ClientDocument> { newOrder_preProcessing.Client };
+
+        SetupMocks();
+
+        CreateOrder_FromDto.Handler sut = new CreateOrder_FromDto.Handler(_client.Object, _dbConfig, _mediator.Object);
+        CreateOrder_FromDto.Command command = new CreateOrder_FromDto.Command { OrderDto = newOrderDto };
+
+        //Validate test command
+        if (!ValidateTestCommand(command))
+            throw new ValidationException("Test command is not valid.");
+
+        // ACT
+        var result = sut.Handle(command, default);
+        OrderDocument mapperResult = OrderMapper.MapOrderDto_OrderDocument(newOrderDto);
+
+        // ASSERT
+        // Verify the InsertOneAsync function was called exactly once
+        _orderCollection.Verify(x =>
+            x.InsertOneAsync(
+                It.IsAny<OrderDocument>(),
+                It.IsAny<InsertOneOptions>(),
+                It.IsAny<CancellationToken>()),
+            Times.Once());
+
+        // Verify mapper logic worked appropriately
+        VerifyOrderMapperBehavior(newOrderDto, mapperResult);
+
+        // Verify stored order's fields match the incoming dto's and are appropriate
+        VerifyNewOrderMatchesIncomingOrder(newOrder_preProcessing);
     }
 
     #endregion

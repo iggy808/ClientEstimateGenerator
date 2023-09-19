@@ -24,7 +24,7 @@ public class GetAllCleints_ToDto
         public async Task<ClientDto> Handle(Query query, CancellationToken cancellationToken)
         {
             IMongoCollection<ClientDocument> clientCollection = _context.GetCollection<ClientDocument>(_config.Clients);
-            List<ClientDocument> clients = await clientCollection.Find(_ => true).ToListAsync().ConfigureAwait(false);
+            List<ClientDocument> clients = await clientCollection.Find(Builders<ClientDocument>.Filter.Exists(c => c.Id)).ToListAsync().ConfigureAwait(false);
 
             ClientDto clientDto = new ClientDto
             {

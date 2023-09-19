@@ -55,10 +55,6 @@ public class CreateOrder_FromDto
                 // Calculate order totals
                 foreach (OrderItemDocument item in order.Items)
                 {
-                    // Need to determine how to calculate totals from business\
-                    /* THIS IS TEST CODE, front end current only has option 
-                     * for total, but would like 
-                     * article quantity */ //item.UnitPrice = item.Total;
                     itemsTotal += item.ArticleQuantity * item.UnitPrice;
                 }
             }

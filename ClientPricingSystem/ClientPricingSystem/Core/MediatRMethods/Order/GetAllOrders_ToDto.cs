@@ -24,7 +24,7 @@ public class GetAllOrders_ToDto
         public async Task<OrderDto> Handle(Query query, CancellationToken cancellationToken)
         {
             IMongoCollection<OrderDocument> orderCollection = _context.GetCollection<OrderDocument>(_config.Orders);
-            List<OrderDocument> orders = await orderCollection.Find(_ => true).ToListAsync().ConfigureAwait(false);
+            List<OrderDocument> orders = await orderCollection.Find(Builders<OrderDocument>.Filter.Exists(c => c.Id)).ToListAsync().ConfigureAwait(false);
 
             OrderDto orderDto = new OrderDto
             {

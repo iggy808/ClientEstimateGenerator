@@ -1,17 +1,14 @@
 ﻿using ClientPricingSystem.Configuration;
+using ClientPricingSystem.Configuration.Mapper;
 using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
 using ClientPricingSystem.Core.MediatRMethods.Client;
-using ClientPricingSystem.Core.Validators.Client;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;
-using FluentValidation.Results;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using MongoDB.Driver.Core.Operations;
 using Moq;
 using Shouldly;
-using System.Linq.Expressions;
 
 namespace ClientPricingSystem.Tests.UnitTests.ClientTests;
 [UnitTestCollection]
@@ -25,17 +22,17 @@ public class GetAllClients_ToDto_TestCollection
     Mock<IMongoCollection<ClientDocument>> _clientCollection;
     Mock<IMongoDatabase> _context;
     Mock<IMongoClient> _client;
-    Mock<IAsyncCursor<ProjectionDefinition<ClientDocument>>> _asyncCursor;
+    Mock<IAsyncCursor<ClientDocument>> _clientCursor;
 
     // Test state variables
-    List<ClientDocument> _TestClientDataset;
+    List<ClientDocument> _testClientDataset;
 
     #region Test Configuration Methods
 
     /* Setup Methods*/
     void SetupTestDataset()
     {
-        _TestClientDataset = ClientFaker.GetClientFaker().Generate(TestClientDatasetSize);
+        _testClientDataset = ClientFaker.GetClientFaker().Generate(TestClientDatasetSize);
     }
 
     void SetupMocks()
@@ -50,23 +47,18 @@ public class GetAllClients_ToDto_TestCollection
             OrderItems = TestDatabase.OrderItems
         });
 
-        //NOTE:
-        //    Cannot Mock queries currently
-        //    - Current query implementations are not suitable for mocking
-        //    - Bookmarked page with potential solution in desktop browser
-        //      - Will need to rework Find calls to be FindSync calls in order to mock effectively for unit tests
-        //      - I believe defining query filters this way will be a better practice in general as well
-
-        // Below ripped from stack overflow, only partially implemented, need to do a lot more reserach here
-        _asyncCursor = new Mock<IAsyncCursor<ProjectionDefinition<ClientDocument>>>();
+        _clientCursor = new Mock<IAsyncCursor<ClientDocument>>();
+        _clientCursor.Setup(x => x.Current).Returns(_testClientDataset);
+        _clientCursor.SetupSequence(x => x.MoveNext(It.IsAny<CancellationToken>())).Returns(true).Returns(false);
+        _clientCursor.SetupSequence(x => x.MoveNextAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(true)).Returns(Task.FromResult(false));
 
         _clientCollection = new Mock<IMongoCollection<ClientDocument>>();
-        _clientCollection.Setup(x => 
-            x.FindSync(
+        _clientCollection.Setup(x =>
+            x.FindAsync(
                 It.IsAny<FilterDefinition<ClientDocument>>(),
-                It.IsAny<FindOptions<ClientDocument, ProjectionDefinition<ClientDocument>>>(),
+                It.IsAny<FindOptions<ClientDocument, ClientDocument>>(),
                 It.IsAny<CancellationToken>()))
-            .Returns(_asyncCursor.Object);
+            .ReturnsAsync(_clientCursor.Object);
 
         _context = new Mock<IMongoDatabase>();
         _context.Setup(x => x.GetCollection<ClientDocument>(It.IsAny<string>(), null)).Returns(_clientCollection.Object);
@@ -77,72 +69,60 @@ public class GetAllClients_ToDto_TestCollection
 
     #endregion
 
+    #region Test Helper Methods
+
+    void VerifyClientMapperBehavior()
+    {
+        foreach (ClientDocument clientDocument in _testClientDataset)
+        { 
+            ClientDto mapperResult = ClientMapper.MapClientDocument_ClientDto(clientDocument);
+            mapperResult.Id.ShouldBe(clientDocument.Id);
+            mapperResult.Address.ShouldBe(clientDocument.Address);
+            mapperResult.MarkupRate.ShouldBe(clientDocument.MarkupRate);
+            mapperResult.Name.ShouldBe(clientDocument.Name);
+        }
+    }
+
+    #endregion
+
     #region Method Tests
 
     [UnitTestMethod]
-    public void SuccessfulWhen_AllDtoFieldsPopulated()
+    public async Task SuccessfulWhen_TwentyClients_InTestDataset()
     {
         // ARRANGE
         SetupTestDataset();
         SetupMocks();
-
-        ClientDocument newClient = ClientFaker.GetClientFaker().Generate();
-        ClientDto newClientDto = new ClientDto
-        { 
-            Name = newClient.Name,
-            Address = newClient.Address,
-            MarkupRate = newClient.MarkupRate
-        };
 
         GetAllCleints_ToDto.Handler sut = new GetAllCleints_ToDto.Handler(_client.Object, _dbConfig);
 
         // ACT
-        var result = sut.Handle(new GetAllCleints_ToDto.Query(), default);
+        ClientDto? result = await sut.Handle(new GetAllCleints_ToDto.Query(), default);
 
         // ASSERT
-        // Verify the Find function was called exactly once
-        _clientCollection.Verify(x =>
-            x.Find(
-                It.IsAny<Expression<Func<ClientDocument, bool>>>(),
-                It.IsAny<FindOptions>())
-            .ToListAsync(It.IsAny<CancellationToken>()),
-            Times.Once());
+        VerifyClientMapperBehavior();
 
+        result.ShouldNotBeNull();
+        result.Clients.Count.ShouldBe(_testClientDataset.Count);
     }
 
     [UnitTestMethod]
-    public void SuccessfulWhen_RequiredDtoFieldsPopulated()
+    public async Task SuccessfulWhen_ZeroClients_InTestDataset()
     {
         // ARRANGE
-        SetupTestDataset();
+        _testClientDataset = new List<ClientDocument>();
         SetupMocks();
 
-        ClientDocument newClient = ClientFaker.GetClientFaker().Generate();
-        ClientDto newClientDto = new ClientDto
-        {
-            Name = newClient.Name,
-            MarkupRate = newClient.MarkupRate
-        };
-
-        CreateClient_FromDto.Handler sut = new CreateClient_FromDto.Handler(_client.Object, _dbConfig);
+        GetAllCleints_ToDto.Handler sut = new GetAllCleints_ToDto.Handler(_client.Object, _dbConfig);
 
         // ACT
-        var result = sut.Handle(new CreateClient_FromDto.Command { ClientDto = newClientDto }, default);
+        ClientDto? result = await sut.Handle(new GetAllCleints_ToDto.Query(), default);
 
         // ASSERT
-        // Verify the InsertOneAsync function was called exactly once
-        _clientCollection.Verify(x =>
-            x.InsertOneAsync(
-                It.IsAny<ClientDocument>(),
-                It.IsAny<InsertOneOptions>(),
-                It.IsAny<CancellationToken>()),
-            Times.Once());
+        VerifyClientMapperBehavior();
 
-        // Verify mapper appropriately mapped the ClientDto object to the ClientDocument object
-        //_DtoToDocument_MapperResult.Name.ShouldBe(newClientDto.Name);
-        //_DtoToDocument_MapperResult.MarkupRate.ShouldBe(newClientDto.MarkupRate);
-        //_DtoToDocument_MapperResult.Address.ShouldBeNull();
-        1.ShouldBe(2);
+        result.ShouldNotBeNull();
+        result.Clients.Count.ShouldBe(_testClientDataset.Count);
     }
 
     #endregion

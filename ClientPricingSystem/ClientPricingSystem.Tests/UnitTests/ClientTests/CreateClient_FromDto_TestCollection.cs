@@ -1,7 +1,9 @@
-﻿using ClientPricingSystem.Configuration;
+﻿using Bogus;
+using ClientPricingSystem.Configuration;
 using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
 using ClientPricingSystem.Core.MediatRMethods.Client;
+using ClientPricingSystem.Core.Validators.Client;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;
 using Microsoft.Extensions.Options;
@@ -61,6 +63,17 @@ public class CreateClient_FromDto_TestCollection
 
     #endregion
 
+    #region Test Helper Methods
+
+    bool ValidateTestCommand(CreateClient_FromDto.Command command)
+    {
+        CreateClient_FromDto_CommandValidator validator = new CreateClient_FromDto_CommandValidator();
+        FluentValidation.Results.ValidationResult validationResult = validator.Validate(command);
+        return validationResult.IsValid;
+    }
+
+    #endregion
+
     #region Method Tests
 
     [UnitTestMethod]
@@ -78,6 +91,15 @@ public class CreateClient_FromDto_TestCollection
         };
 
         CreateClient_FromDto.Handler sut = new CreateClient_FromDto.Handler(_client.Object, _dbConfig);
+
+        CreateClient_FromDto.Command command = new CreateClient_FromDto.Command
+        {
+            ClientDto = newClientDto
+        };
+
+        //Validate test command
+        if (!ValidateTestCommand(command))
+            throw new ValidationException("Test command is not valid.");
 
         // ACT
         var result = sut.Handle(new CreateClient_FromDto.Command{ ClientDto = newClientDto }, default);
@@ -111,6 +133,15 @@ public class CreateClient_FromDto_TestCollection
         };
 
         CreateClient_FromDto.Handler sut = new CreateClient_FromDto.Handler(_client.Object, _dbConfig);
+
+        CreateClient_FromDto.Command command = new CreateClient_FromDto.Command
+        {
+            ClientDto = newClientDto
+        };
+
+        //Validate test command
+        if (!ValidateTestCommand(command))
+            throw new ValidationException("Test command is not valid.");
 
         // ACT
         var result = sut.Handle(new CreateClient_FromDto.Command { ClientDto = newClientDto }, default);

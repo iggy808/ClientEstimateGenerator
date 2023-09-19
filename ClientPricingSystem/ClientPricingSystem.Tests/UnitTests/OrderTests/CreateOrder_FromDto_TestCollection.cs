@@ -37,7 +37,14 @@ public class CreateOrder_FromDto_TestCollection
     #region Test Configuration Methods
 
     /* Setup Methods*/
-    void SetupMocks()
+    public void Setup()
+    {
+        SetupDbConfiguration();
+        SetupMockOrderCollection();
+        SetupMockMediator();
+    }
+
+    void SetupDbConfiguration()
     {
         _dbConfig = Options.Create(new DatabaseConfiguration
         {
@@ -48,7 +55,10 @@ public class CreateOrder_FromDto_TestCollection
             Vendors = TestDatabase.Vendors,
             OrderItems = TestDatabase.OrderItems
         });
+    }
 
+    void SetupMockOrderCollection()
+    {
         _orderCollection = new Mock<IMongoCollection<OrderDocument>>();
         // Setup callback to record result of mapping the OrderDto object to the OrderDocument object
         _orderCollection.Setup(x =>
@@ -56,8 +66,16 @@ public class CreateOrder_FromDto_TestCollection
                 It.IsAny<OrderDocument>(),
                 It.IsAny<InsertOneOptions>(),
                 It.IsAny<CancellationToken>()))
-            .Callback((OrderDocument order, InsertOneOptions options, CancellationToken cancellationToken) => RecordNewlyCreatedOrder(order));        
-        
+            .Callback((OrderDocument order, InsertOneOptions options, CancellationToken cancellationToken) => RecordNewlyCreatedOrder(order));
+    }
+
+    void SetupMockMediator()
+    {
+        _mediator = new Mock<IMediator>();
+    }
+
+    void SetupMocks()
+    {   
         _clientCursor = new Mock<IAsyncCursor<ClientDocument>>();
         _clientCursor.Setup(x => x.Current).Returns(_testClientDataset);
         _clientCursor.SetupSequence(x => x.MoveNext(It.IsAny<CancellationToken>())).Returns(true).Returns(false);
@@ -77,8 +95,6 @@ public class CreateOrder_FromDto_TestCollection
 
         _client = new Mock<IMongoClient>();
         _client.Setup(x => x.GetDatabase(It.IsAny<string?>(), null)).Returns(_context.Object);
-
-        _mediator = new Mock<IMediator>();
     }
 
     /* Callback Methods */

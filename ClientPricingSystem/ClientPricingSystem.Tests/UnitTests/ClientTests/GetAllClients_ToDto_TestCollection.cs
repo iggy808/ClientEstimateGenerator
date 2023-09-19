@@ -30,12 +30,12 @@ public class GetAllClients_ToDto_TestCollection
     #region Test Configuration Methods
 
     /* Setup Methods*/
-    void SetupTestDataset()
+    public void Setup()
     {
-        _testClientDataset = ClientFaker.GetClientFaker().Generate(TestClientDatasetSize);
+        SetupDbConfiguration();
     }
 
-    void SetupMocks()
+    void SetupDbConfiguration()
     {
         _dbConfig = Options.Create(new DatabaseConfiguration
         {
@@ -46,7 +46,15 @@ public class GetAllClients_ToDto_TestCollection
             Orders = TestDatabase.Orders,
             OrderItems = TestDatabase.OrderItems
         });
+    }
 
+    void SetupTestDataset()
+    {
+        _testClientDataset = ClientFaker.GetClientFaker().Generate(TestClientDatasetSize);
+    }
+
+    void SetupMocks()
+    {
         _clientCursor = new Mock<IAsyncCursor<ClientDocument>>();
         _clientCursor.Setup(x => x.Current).Returns(_testClientDataset);
         _clientCursor.SetupSequence(x => x.MoveNext(It.IsAny<CancellationToken>())).Returns(true).Returns(false);
@@ -122,6 +130,7 @@ public class GetAllClients_ToDto_TestCollection
         VerifyClientMapperBehavior();
 
         result.ShouldNotBeNull();
+        result.Clients.Count.ShouldBe(0);
         result.Clients.Count.ShouldBe(_testClientDataset.Count);
     }
 

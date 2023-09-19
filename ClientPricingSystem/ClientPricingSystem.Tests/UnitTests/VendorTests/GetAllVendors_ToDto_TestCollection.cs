@@ -30,12 +30,12 @@ public class GetAllVendors_ToDto_TestCollection
     #region Test Configuration Methods
 
     /* Setup Methods*/
-    void SetupTestDataset()
+    public void Setup()
     {
-        _testVendorDataset = VendorFaker.GetVendorFaker().Generate(TestVendorDatasetSize);
+        SetupDbConfiguration();
     }
 
-    void SetupMocks()
+    void SetupDbConfiguration()
     {
         _dbConfig = Options.Create(new DatabaseConfiguration
         {
@@ -46,7 +46,10 @@ public class GetAllVendors_ToDto_TestCollection
             Orders = TestDatabase.Orders,
             OrderItems = TestDatabase.OrderItems
         });
+    }
 
+    void SetupMocks()
+    {
         _vendorCursor = new Mock<IAsyncCursor<VendorDocument>>();
         _vendorCursor.Setup(x => x.Current).Returns(_testVendorDataset);
         _vendorCursor.SetupSequence(x => x.MoveNext(It.IsAny<CancellationToken>())).Returns(true).Returns(false);
@@ -65,6 +68,11 @@ public class GetAllVendors_ToDto_TestCollection
 
         _client = new Mock<IMongoClient>();
         _client.Setup(x => x.GetDatabase(It.IsAny<string?>(), null)).Returns(_context.Object);
+    }
+
+    void SetupTestDataset()
+    {
+        _testVendorDataset = VendorFaker.GetVendorFaker().Generate(TestVendorDatasetSize);
     }
 
     #endregion

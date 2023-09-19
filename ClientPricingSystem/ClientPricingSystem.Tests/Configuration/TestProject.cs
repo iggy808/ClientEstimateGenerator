@@ -11,6 +11,7 @@ public class TestProject : ITestProject
         configuration.Conventions.Add<UnitTestDiscovery, UnitTestExecution>();
         configuration.Conventions.Add<IntegrationTestDiscovery, IntegrationTestExecution>();
         configuration.Conventions.Add<ValidationTestDiscovery, ValidationTestExecution>();
+        
     }
 }
 

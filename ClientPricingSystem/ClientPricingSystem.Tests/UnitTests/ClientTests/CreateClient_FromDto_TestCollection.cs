@@ -27,7 +27,14 @@ public class CreateClient_FromDto_TestCollection
     #region Test Configuration Methods
 
     /* Setup Methods*/
-    void SetupMocks()
+    public void Setup()
+    {
+        SetupDbConfiguration();
+        SetupMockClientCollection();
+        SetupMockContextAndClient();
+    }
+
+    public void SetupDbConfiguration()
     {
         _dbConfig = Options.Create(new DatabaseConfiguration
         {
@@ -38,7 +45,10 @@ public class CreateClient_FromDto_TestCollection
             Orders = TestDatabase.Orders,
             OrderItems = TestDatabase.OrderItems
         });
+    }
 
+    public void SetupMockClientCollection()
+    {
         _clientCollection = new Mock<IMongoCollection<ClientDocument>>();
         // Setup callback to record result of mapping the ClientDto object to the ClientDocument object
         _clientCollection.Setup(x =>
@@ -47,7 +57,10 @@ public class CreateClient_FromDto_TestCollection
                 It.IsAny<InsertOneOptions>(),
                 It.IsAny<CancellationToken>()))
             .Callback((ClientDocument client, InsertOneOptions options, CancellationToken cancellationToken) => Record_DtoToDocument_MapperResult(client));
+    }
 
+    public void SetupMockContextAndClient()
+    {
         _context = new Mock<IMongoDatabase>();
         _context.Setup(x => x.GetCollection<ClientDocument>(It.IsAny<string>(), null)).Returns(_clientCollection.Object);
 
@@ -80,8 +93,6 @@ public class CreateClient_FromDto_TestCollection
     public void SuccessfulWhen_AllDtoFieldsPopulated()
     {
         // ARRANGE
-        SetupMocks();
-
         ClientDocument newClient = ClientFaker.GetClientFaker().Generate();
         ClientDto newClientDto = new ClientDto
         { 
@@ -123,8 +134,6 @@ public class CreateClient_FromDto_TestCollection
     public void SuccessfulWhen_RequiredDtoFieldsPopulated()
     {
         // ARRANGE
-        SetupMocks();
-
         ClientDocument newClient = ClientFaker.GetClientFaker().Generate();
         ClientDto newClientDto = new ClientDto
         {

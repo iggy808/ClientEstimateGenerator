@@ -30,14 +30,12 @@ public class GetAllOrders_ToDto_TestCollection
     #region Test Configuration Methods
 
     /* Setup Methods*/
-    void SetupTestDataset()
+    public void Setup()
     {
-        _testOrderDataset = OrderFaker.GetOrderFaker().Generate(TestOrderDatasetSize);
-        // Items not stored alongside order in database, this line mimicks this
-        _testOrderDataset.ForEach(o => o.Items = null);
+        SetupDbConfiguration();
     }
 
-    void SetupMocks()
+    void SetupDbConfiguration()
     {
         _dbConfig = Options.Create(new DatabaseConfiguration
         {
@@ -48,7 +46,10 @@ public class GetAllOrders_ToDto_TestCollection
             Orders = TestDatabase.Orders,
             OrderItems = TestDatabase.OrderItems
         });
+    }
 
+    void SetupMocks()
+    {
         _orderCursor = new Mock<IAsyncCursor<OrderDocument>>();
         _orderCursor.Setup(x => x.Current).Returns(_testOrderDataset);
         _orderCursor.SetupSequence(x => x.MoveNext(It.IsAny<CancellationToken>())).Returns(true).Returns(false);
@@ -67,6 +68,13 @@ public class GetAllOrders_ToDto_TestCollection
 
         _client = new Mock<IMongoClient>();
         _client.Setup(x => x.GetDatabase(It.IsAny<string?>(), null)).Returns(_context.Object);
+    }
+
+    void SetupTestDataset()
+    {
+        _testOrderDataset = OrderFaker.GetOrderFaker().Generate(TestOrderDatasetSize);
+        // Items not stored alongside order in database, this line mimicks this
+        _testOrderDataset.ForEach(o => o.Items = null);
     }
 
     #endregion

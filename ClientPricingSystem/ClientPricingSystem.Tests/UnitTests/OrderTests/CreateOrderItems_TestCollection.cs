@@ -27,7 +27,13 @@ public class CreateOrderItems_TestCollection
     #region Test Configuration Methods
 
     /* Setup Methods*/
-    void SetupMocks()
+    public void Setup()
+    {
+        SetupDbConfiguration();
+        SetupMockOrderCollection();
+        SetupMockContextAndClient();
+    }
+    void SetupDbConfiguration()
     {
         _dbConfig = Options.Create(new DatabaseConfiguration
         {
@@ -38,7 +44,10 @@ public class CreateOrderItems_TestCollection
             Orders = TestDatabase.Orders,
             OrderItems = TestDatabase.OrderItems
         });
+    }
 
+    void SetupMockOrderCollection()
+    {
         _orderCollection = new Mock<IMongoCollection<OrderItemDocument>>();
         _orderCollection.Setup(x =>
             x.InsertManyAsync(
@@ -49,7 +58,10 @@ public class CreateOrderItems_TestCollection
             {
                 RecordUpdatedOrderItems(items);
             });
+    }
 
+    void SetupMockContextAndClient()
+    {
         _context = new Mock<IMongoDatabase>();
         _context.Setup(x => x.GetCollection<OrderItemDocument>(It.IsAny<string>(), null)).Returns(_orderCollection.Object);
 
@@ -89,8 +101,6 @@ public class CreateOrderItems_TestCollection
     public async Task SuccessfulWhen_ThreeItems_InOrder()
     {
         // ARRANGE
-        SetupMocks();
-
         OrderDocument newOrder = OrderFaker.GetOrderFaker().Generate();
         newOrder.Items.ForEach(oi => oi.OrderId = Guid.Empty);
         _BaseOrder = newOrder;
@@ -113,8 +123,6 @@ public class CreateOrderItems_TestCollection
     public async Task SuccessfulWhen_OneItem_InOrder()
     {
         // ARRANGE
-        SetupMocks();
-
         OrderDocument newOrder = OrderFaker.GetOrderFaker().Generate();
         newOrder.Items.ForEach(oi => oi.OrderId = Guid.Empty);
         _BaseOrder = newOrder;

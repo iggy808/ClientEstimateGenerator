@@ -27,7 +27,13 @@ public class CreateVendor_FromDto_TestCollection
     #region Test Configuration Methods
 
     /* Setup Methods*/
-    void SetupMocks()
+    public void Setup()
+    {
+        SetupDbConfiguration();
+        SetupMockVendorCollection();
+        SetupMockContextAndClient();
+    }
+    void SetupDbConfiguration()
     {
         _dbConfig = Options.Create(new DatabaseConfiguration
         {
@@ -38,7 +44,10 @@ public class CreateVendor_FromDto_TestCollection
             Orders = TestDatabase.Orders,
             OrderItems = TestDatabase.OrderItems
         });
+    }
 
+    void SetupMockVendorCollection()
+    {
         _vendorCollection = new Mock<IMongoCollection<VendorDocument>>();
         // Setup callback to record result of mapping the VendorDto object to the VendorDocument object
         _vendorCollection.Setup(x =>
@@ -47,7 +56,10 @@ public class CreateVendor_FromDto_TestCollection
                 It.IsAny<InsertOneOptions>(),
                 It.IsAny<CancellationToken>()))
             .Callback((VendorDocument vendor, InsertOneOptions options, CancellationToken cancellationToken) => Record_DtoToDocument_MapperResult(vendor));
+    }
 
+    void SetupMockContextAndClient()
+    {
         _context = new Mock<IMongoDatabase>();
         _context.Setup(x => x.GetCollection<VendorDocument>(It.IsAny<string>(), null)).Returns(_vendorCollection.Object);
 
@@ -80,8 +92,6 @@ public class CreateVendor_FromDto_TestCollection
     public void SuccessfulWhen_AllDtoFieldsPopulated()
     {
         // ARRANGE
-        SetupMocks();
-
         VendorDocument newVendor = VendorFaker.GetVendorFaker().Generate();
         VendorDto newVendorDto = new VendorDto
         { 
@@ -123,8 +133,6 @@ public class CreateVendor_FromDto_TestCollection
     public void SuccessfulWhen_RequiredDtoFieldsPopulated()
     {
         // ARRANGE
-        SetupMocks();
-
         VendorDocument newVendor = VendorFaker.GetVendorFaker().Generate();
         VendorDto newVendorDto = new VendorDto
         {
@@ -164,8 +172,6 @@ public class CreateVendor_FromDto_TestCollection
     public void SuccessfulWhen_DomainsRaw_IsNotNullOrEmpty()
     {
         // ARRANGE
-        SetupMocks();
-
         VendorDocument newVendor = VendorFaker.GetVendorFaker().Generate();
         VendorDto newVendorDto = new VendorDto
         {

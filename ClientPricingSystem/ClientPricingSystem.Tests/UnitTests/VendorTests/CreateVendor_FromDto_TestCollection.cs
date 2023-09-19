@@ -2,7 +2,7 @@
 using ClientPricingSystem.Configuration;
 using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
-using ClientPricingSystem.Core.MediatRMethods.Vendor;
+using ClientPricingSystem.Core.Methods.Vendor;
 using ClientPricingSystem.Core.Validators.Vendor;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;

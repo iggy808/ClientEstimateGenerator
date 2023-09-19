@@ -1,4 +1,4 @@
-﻿using ClientPricingSystem.Core.MediatRMethods.Order.OrderItem;
+﻿using ClientPricingSystem.Core.Methods.Order.OrderItem;
 using FluentValidation;
 
 namespace ClientPricingSystem.Core.Validators.Order.OrderItem;

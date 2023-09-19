@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using ClientPricingSystem.Configuration;
 using ClientPricingSystem.Core.Documents;
-using ClientPricingSystem.Core.MediatRMethods.Order.OrderItem;
+using ClientPricingSystem.Core.Methods.Order.OrderItem;
 using ClientPricingSystem.Core.Validators.Order.OrderItem;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;

@@ -6,13 +6,13 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ClientPricingSystem.Core.MediatRMethods.Vendor;
+namespace ClientPricingSystem.Core.Methods.Vendor;
 public class GetAllVendors_ToDto
 {
-    public class Query : IRequest<VendorDto> {}
+    public class Query : IRequest<VendorDto> { }
 
     public class Handler : IRequestHandler<Query, VendorDto>
-    { 
+    {
         IMongoDatabase _context { get; set; }
         DatabaseConfiguration _config { get; set; }
         public Handler(IMongoClient mongoClient, IOptions<DatabaseConfiguration> config)

@@ -1,6 +1,6 @@
 ﻿using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
-using ClientPricingSystem.Core.MediatRMethods.Order.OrderItem;
+using ClientPricingSystem.Core.Methods.Order.OrderItem;
 using ClientPricingSystem.Core.Validators.Order.OrderItem;
 using ClientPricingSystem.Tests.Configuration;
 using ClientPricingSystem.Tests.Fakers;

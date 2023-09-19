@@ -2,15 +2,15 @@
 using ClientPricingSystem.Configuration.Mapper;
 using ClientPricingSystem.Core.Documents;
 using ClientPricingSystem.Core.Dtos;
-using ClientPricingSystem.Core.MediatRMethods.Order.OrderItem;
+using ClientPricingSystem.Core.Methods.Order.OrderItem;
 using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ClientPricingSystem.Core.MediatRMethods.Order;
+namespace ClientPricingSystem.Core.Methods.Order;
 public class CreateOrder_FromDto
 {
-    public class Command : IRequest<Unit> 
+    public class Command : IRequest<Unit>
     {
         public OrderDto OrderDto { get; set; }
     }

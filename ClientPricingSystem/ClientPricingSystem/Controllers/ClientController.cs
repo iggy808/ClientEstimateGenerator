@@ -1,5 +1,5 @@
 ﻿using ClientPricingSystem.Core.Dtos;
-using ClientPricingSystem.Core.MediatRMethods.Client;
+using ClientPricingSystem.Core.Methods.Client;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

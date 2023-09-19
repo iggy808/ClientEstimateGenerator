@@ -1,4 +1,4 @@
-﻿using ClientPricingSystem.Core.MediatRMethods.Order;
+﻿using ClientPricingSystem.Core.Methods.Order;
 using FluentValidation;
 
 namespace ClientPricingSystem.Core.Validators.Order;

@@ -1,15 +1,17 @@
 ﻿using ClientPricingSystem.Configuration;
+using ClientPricingSystem.Configuration.Mapper;
 using ClientPricingSystem.Core.Documents;
+using ClientPricingSystem.Core.Dtos;
 using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ClientPricingSystem.Core.MediatRMethods.Order.OrderItem;
-public class CreateOrderItems
+namespace ClientPricingSystem.Core.Methods.Vendor;
+public class CreateVendor_FromDto
 {
     public class Command : IRequest<Unit>
     {
-        public OrderDocument Order { get; set; }
+        public VendorDto VendorDto { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, Unit>
@@ -24,10 +26,13 @@ public class CreateOrderItems
 
         public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
         {
-            command.Order.Items.ForEach(i => i.OrderId = command.Order.Id);
+            IMongoCollection<VendorDocument> vendorCollection = _context.GetCollection<VendorDocument>(_config.Vendors);
 
-            IMongoCollection<OrderItemDocument> orderItemCollection = _context.GetCollection<OrderItemDocument>(_config.OrderItems);
-            await orderItemCollection.InsertManyAsync(command.Order.Items).ConfigureAwait(false);
+            VendorDocument vendor = VendorMapper.MapVendorDto_VendorDocument(command.VendorDto);
+            if (command.VendorDto.Domains != null)
+                vendor.Domains = command.VendorDto.Domains;
+
+            await vendorCollection.InsertOneAsync(vendor).ConfigureAwait(false);
 
             return Unit.Value;
         }

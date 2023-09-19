@@ -6,15 +6,12 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ClientPricingSystem.Core.MediatRMethods.Client;
-public class CreateClient_FromDto
+namespace ClientPricingSystem.Core.Methods.Client;
+public class GetAllCleints_ToDto
 {
-    public class Command : IRequest<Unit>
-    { 
-        public ClientDto? ClientDto { get; set; }
-    }
+    public class Query : IRequest<ClientDto> { }
 
-    public class Handler : IRequestHandler<Command, Unit>
+    public class Handler : IRequestHandler<Query, ClientDto>
     {
         IMongoDatabase _context;
         DatabaseConfiguration _config;
@@ -24,15 +21,17 @@ public class CreateClient_FromDto
             _config = config.Value;
         }
 
-        public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<ClientDto> Handle(Query query, CancellationToken cancellationToken)
         {
             IMongoCollection<ClientDocument> clientCollection = _context.GetCollection<ClientDocument>(_config.Clients);
+            List<ClientDocument> clients = await clientCollection.Find(Builders<ClientDocument>.Filter.Exists(c => c.Id)).ToListAsync().ConfigureAwait(false);
 
-            ClientDocument client = ClientMapper.MapClientDto_ClientDocument(command.ClientDto);
-            await clientCollection.InsertOneAsync(client).ConfigureAwait(false);
+            ClientDto clientDto = new ClientDto
+            {
+                Clients = clients.Select(c => ClientMapper.MapClientDocument_ClientDto(c)).ToList()
+            };
 
-            return Unit.Value;
+            return clientDto;
         }
     }
 }
-

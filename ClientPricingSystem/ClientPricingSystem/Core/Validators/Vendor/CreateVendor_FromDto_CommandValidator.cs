@@ -1,4 +1,4 @@
-﻿using ClientPricingSystem.Core.MediatRMethods.Vendor;
+﻿using ClientPricingSystem.Core.Methods.Vendor;
 using FluentValidation;
 
 namespace ClientPricingSystem.Core.Validators.Vendor;

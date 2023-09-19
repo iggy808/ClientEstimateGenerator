@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace ClientPricingSystem.Core.MediatRMethods.Order;
+namespace ClientPricingSystem.Core.Methods.Order;
 public class GetAllOrders_ToDto
 {
     public class Query : IRequest<OrderDto> { }

@@ -12,9 +12,10 @@ public class ClientController : Controller
         _mediator = mediator;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        ClientDto clientDto = await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false);
+        return View(clientDto);
     }
 
     public async Task<IActionResult> Get()

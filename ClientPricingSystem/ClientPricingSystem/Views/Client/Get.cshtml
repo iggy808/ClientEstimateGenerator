@@ -1,6 +1,6 @@
 ﻿@using ClientPricingSystem.Core.Dtos
 @model ClientDto
-<table>
+<table class ="table table-bordered table-responsive table-hover">
     <thead>
         <tr>
             <th>Name</th>
@@ -9,13 +9,5 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var entry in Model.Clients)
-        {
-            <tr>
-                <td>@entry.Name</td>
-                <td>@entry.Address</td>
-                <td>@entry.MarkupRate</td>
-            </tr>
-        }
     </tbody>
 </table>

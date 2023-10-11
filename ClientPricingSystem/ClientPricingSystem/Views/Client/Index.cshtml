@@ -1,4 +1,7 @@
-﻿<ul>
+﻿@using ClientPricingSystem.Core.Dtos
+@model ClientDto
+
+<ul>
     <li>
         <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="Get">View clients.</a>
     </li>
@@ -6,3 +9,27 @@
         <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="Create">Create a new client.</a>
     </li>
 </ul>
+
+<table class="table table-bordered table-responsive table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>MarkupRate</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Clients is not null)
+        {
+            @foreach (var entry in Model.Clients)
+            {
+                <tr>
+                    <td>@entry.Name</td>
+                    <td>@entry.Address</td>
+                    <td>@entry.MarkupRate</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

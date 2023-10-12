@@ -27,7 +27,7 @@ public class ClientController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return PartialView();
+        return View();
     }
 
     [HttpPost]
@@ -45,8 +45,9 @@ public class ClientController : Controller
                 Console.WriteLine("Error occured while creating client:\n" + e.Message);
             }
         }
-        return RedirectToAction("Get", "Client", null);
+        return RedirectToAction("Index", "Client", null);
     }
+
 }
 
 

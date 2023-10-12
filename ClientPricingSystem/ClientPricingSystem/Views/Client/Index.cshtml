@@ -1,14 +1,33 @@
 ﻿@using ClientPricingSystem.Core.Dtos
 @model ClientDto
 
-<ul>
-    <li>
-        <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="Get">View clients.</a>
-    </li>
-    <li>
-        <a class="nav-link text-dark" asp-area="" asp-controller="Client" asp-action="Create">Create a new client.</a>
-    </li>
-</ul>
+@{
+    ViewBag.Title = "Clients";
+}
+
+@section scripts
+{
+}
+
+
+<p>
+    @using (Html.BeginForm("Search", "Client", FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td>
+                    <input type="text" id="txtName" name="searchparam" placeholder="type here to search" />
+                </td>
+                <td>
+                    <input type="submit" id="btnSubmit" value="Search" />
+                </td>
+            </tr>
+        </table>
+    }
+
+    <input type="button" value="Create New Client" onclick="location.href='@Url.Action("Create", "Client")'" />
+
+</p>
 
 <table class="table table-bordered table-responsive table-hover">
     <thead>
@@ -27,9 +46,44 @@
                     <td>@entry.Name</td>
                     <td>@entry.Address</td>
                     <td>@entry.MarkupRate</td>
+
+                    <td>  
+                        @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |  
+                            @Html.ActionLink("Details", "Details", new { id=item.Id }) |  
+                            @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@  
+  
+                        <a href="javascript:void(0);" class="anchorDetail"  data-id="@entry.Id">Details</a>  
+                    </td>  
+
                 </tr>
+
             }
         }
     </tbody>
 </table>
 
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>

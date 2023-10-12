@@ -27,7 +27,7 @@ public class ClientController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        return PartialView();
     }
 
     [HttpPost]

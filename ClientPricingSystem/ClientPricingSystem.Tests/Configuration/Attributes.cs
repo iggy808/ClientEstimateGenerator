@@ -13,3 +13,10 @@ public class IntegrationTestCollectionAttribute : Attribute { }
 
 [AttributeUsage(AttributeTargets.Method)]
 public class IntegrationTestMethodAttribute : Attribute { }
+
+// Attributes used for validation test discovery and execution
+[AttributeUsage(AttributeTargets.Class)]
+public class ValidationTestCollectionAttribute : Attribute { }
+
+[AttributeUsage(AttributeTargets.Method)]
+public class ValidationTestMethodAttribute : Attribute { }

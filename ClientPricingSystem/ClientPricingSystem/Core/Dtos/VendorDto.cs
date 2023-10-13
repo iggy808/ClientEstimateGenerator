@@ -8,6 +8,6 @@ public class VendorDto
     public List<string> Domains { get; set; }
 
     // View fields
-    public string DomainsRaw { get; set; }
+    public string? DomainsRaw { get; set; }
     public List<VendorDto> Vendors { get; set; }
 }

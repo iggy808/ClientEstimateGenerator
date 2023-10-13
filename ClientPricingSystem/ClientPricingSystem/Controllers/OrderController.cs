@@ -1,8 +1,8 @@
 ﻿using ClientPricingSystem.Core.Dtos;
 using ClientPricingSystem.Core.Enums;
-using ClientPricingSystem.Core.MediatRMethods.Client;
-using ClientPricingSystem.Core.MediatRMethods.Order;
-using ClientPricingSystem.Core.MediatRMethods.Vendor;
+using ClientPricingSystem.Core.Methods.Client;
+using ClientPricingSystem.Core.Methods.Order;
+using ClientPricingSystem.Core.Methods.Vendor;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

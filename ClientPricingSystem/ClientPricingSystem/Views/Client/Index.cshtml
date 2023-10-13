@@ -9,56 +9,90 @@
 {
 }
 
-<div class="indexContainer">
-    <p>
-        @using (Html.BeginForm("Search", "Client", FormMethod.Post))
-        {
-            <div class="btn-group">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0 m-1" type="submit">Search</button>
-                <!-- Button trigger modal -->
-                <input type="button" value="Create New Client" href="#" data-bs-toggle="modal" data-bs-target="#newClientModal" class="btn btn-primary ml-5" />
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <h4 class="card-title"> Clients </h4>
+                    </div>
+                    <div class="col-6 text-right">
+                        <input class="btn btn-primary float-end" type="button" value="Create New Client" href="#" data-bs-toggle="modal" data-bs-target="#newClientModal" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6"> 
+                        @using (Html.BeginForm("Search", "Client", FormMethod.Post)) {
+                            <div class="btn-group">
+                                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-outline-success my-2 my-sm-0 m-1" type="submit">Search</button>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-6">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <div class="dropdown">
+                                <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownFilter" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Filter by
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownFilter">
+                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownSort" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Sort by
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownSort">
+                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <table class="table table-success table-responsive table-hover table-striped rounded-3 overflow-hidden">
+                        <thead>
+                            <tr>
+                                <th> Name</th>
+                                <th> Address</th>
+                                <th> MarkupRate</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Clients is not null)
+                            {
+                                @foreach (var entry in Model.Clients)
+                                {
+                                    <tr>
+                                        <td> @entry.Name</td>
+                                        <td> @entry.Address</td>
+                                        <td> @entry.MarkupRate</td>
+                                        <td>
+                                            @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                                                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                                                @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
+
+                                            <a href="javascript:void(0);" class="anchorDetail" data-id="@entry.Id"> Details</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        }
-
-    
-
-    </p>
-
-    <table class="table table-success table-responsive table-hover table-striped rounded-3 overflow-hidden">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>MarkupRate</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Clients is not null)
-            {
-                @foreach (var entry in Model.Clients)
-                {
-                    <tr>
-                        <td>@entry.Name</td>
-                        <td>@entry.Address</td>
-                        <td>@entry.MarkupRate</td>
-
-                        <td>  
-                            @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |  
-                                @Html.ActionLink("Details", "Details", new { id=item.Id }) |  
-                                @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@  
-  
-                            <a href="javascript:void(0);" class="anchorDetail"  data-id="@entry.Id">Details</a>  
-                        </td>  
-
-                    </tr>
-
-                }
-            }
-        </tbody>
-    </table>
+        </div>
+    </div>
 </div>
+
+
 <!-- Modal -->
 <div class="modal" id="newClientModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog  modal-dialog-centered">
@@ -85,3 +119,14 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $(".dropdown-menu li").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>

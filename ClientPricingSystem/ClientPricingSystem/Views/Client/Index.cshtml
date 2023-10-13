@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <table class="table table-success table-responsive table-hover table-striped rounded-3 overflow-hidden">
+                    <table class="table table-responsive table-hover table-striped rounded-3 overflow-hidden">
                         <thead>
                             <tr>
                                 <th> Name</th>
@@ -121,12 +121,5 @@
 </div>
 
 <script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $(".dropdown-menu li").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
+
 </script>

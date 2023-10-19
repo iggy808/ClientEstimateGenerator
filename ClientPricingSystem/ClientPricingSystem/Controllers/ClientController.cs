@@ -2,6 +2,7 @@
 using ClientPricingSystem.Core.Methods.Client;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace ClientPricingSystem.Controllers;
 public class ClientController : Controller
@@ -13,12 +14,6 @@ public class ClientController : Controller
     }
 
     public async Task<IActionResult> Index()
-    {
-        ClientDto clientDto = await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false);
-        return View(clientDto);
-    }
-
-    public async Task<IActionResult> Get()
     {
         ClientDto clientDto = await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false);
         return View(clientDto);
@@ -47,7 +42,23 @@ public class ClientController : Controller
         }
         return RedirectToAction("Index", "Client", null);
     }
-
+    [HttpGet]
+    public async Task<IActionResult> Search(string searchText)
+    {
+        ClientDto clientDto = await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false);
+        if (searchText != null)
+        {
+            Console.WriteLine(clientDto.Clients);
+            if (clientDto.Clients != null)
+            {
+                var result = clientDto.Clients.Where(a => a.Name.ToLower().Contains(searchText.ToLower()) || a.Address.ToLower().Contains(searchText) || a.MarkupRate.ToString().Contains(searchText)).ToList();
+                return PartialView("_TableView", result);
+            }
+           
+        }
+        return PartialView("_TableView", clientDto.Clients);
+        
+    }
 }
 
 

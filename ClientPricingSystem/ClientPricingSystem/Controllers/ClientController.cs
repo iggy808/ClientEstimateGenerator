@@ -59,6 +59,38 @@ public class ClientController : Controller
         return PartialView("_TableView", clientDto.Clients);
         
     }
+
+    public async Task<IActionResult> Sort(string sortOrder)
+    {
+        ViewBag.ClientNameSortParam = String.IsNullOrEmpty(sortOrder) ? "ClientName_desc" : "";
+        ViewBag.ClientAddressSortParam = sortOrder == "Address" ? "Address_desc" : "Address";
+        ViewBag.ClientAddressSortParam = sortOrder == "MarkupRate" ? "MarkupRate_desc" : "MarkupRate";
+
+        ClientDto clientDto = await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false);
+        var result = new List<ClientDto>();
+        switch (sortOrder)
+        {
+            case "ClientName_desc":
+                result = clientDto.Clients.OrderByDescending(a => a.Name).ToList();
+                break;
+            case "Address":
+                result = clientDto.Clients.OrderBy(a => a.Address).ToList();
+                break;
+            case "Address_desc":
+                result = clientDto.Clients.OrderByDescending(a => a.Address).ToList();
+                break;
+            case "MarkupRate":
+                result = clientDto.Clients.OrderBy(a => a.MarkupRate).ToList();
+                break;
+            case "MarkupRate_desc":
+                result = clientDto.Clients.OrderByDescending(a => a.MarkupRate).ToList();
+                break;
+
+        }
+
+        return PartialView("_TableView", result);
+
+    }
 }
 
 

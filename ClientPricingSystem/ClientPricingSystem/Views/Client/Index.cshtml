@@ -1,5 +1,5 @@
 ﻿@using ClientPricingSystem.Core.Dtos
-
+@model ClientDto
 @{
     ViewBag.Title = "Clients";
 }
@@ -67,6 +67,7 @@
                                     <li><a class="dropdown-item" href="#">Something else here</a></li>
                                 </ul>
                             </div>
+                            <i class="bi bi-sort-up"></i>
                         </div>
                     </div>
                 </div>
@@ -77,7 +78,7 @@
 </div>
 
 
-@*<!-- Modal -->
+<!-- Modal -->
 <div class="modal" id="newClientModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
@@ -102,4 +103,4 @@
             
         </div>
     </div>
-</div>*@
+</div>

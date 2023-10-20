@@ -9,27 +9,65 @@
     <script>
         $(() => {
             getClients();
-
             $('#clientSearch').on('keyup', () => {
                 getClients();
             });
+
+            $('#sortToggle').on("click", () => {
+                toggleSortDirection();
+            });
+
+            $('#nameDDItem').on("click", () => {
+                $('#dropdownSort').text($(event.target).text());
+            });
+
+            $('#addressDDItem').on("click", () => {
+                $('#dropdownSort').text($(event.target).text());
+            });
+
+            $('#markupDDItem').on("click", () => {
+                $('#dropdownSort').text($(event.target).text());
+            });
+
+            $('#clearDDItem').on("click", () => {
+                $('#dropdownSort').text('Sort By');
+            });
+
         });
 
-        function getClients() {
+        function getClients(sortDirection) {
             $.ajax({
                 url: '@Url.Action("Search", "Client")',
                 datatype: 'html',
                 method: 'GET',
-                data: { searchText: $('#clientSearch').val() },
+                data: { searchText: $('#clientSearch').val(), sortBy: $('#dropdownSort').text(), sortDirection: sortDirection },
                 success: function (res) {
-                    console.log("Result" + res);
                     $('#tableClients').html('').html(res);
                 },
                 error: function (err) {
                     console.log('error');
                     console.log(err);
                 }
-            })
+            });
+            }
+
+        function toggleSortDirection() {
+            var toggleIcon = $('#sortToggle').children();
+            if (toggleIcon.hasClass("bi bi-sort-up"))
+            {
+                toggleIcon.removeClass("bi bi-sort-up");
+                toggleIcon.addClass("bi bi-sort-down");
+                var sortDirection = "desc";
+                getClients(sortDirection);
+            }
+            else
+            {
+                toggleIcon.removeClass("bi bi-sort-down");
+                toggleIcon.addClass("bi bi-sort-up");
+                var sortDirection = "asc";
+                getClients(sortDirection);
+            }
+
         }
     </script>
 }
@@ -44,7 +82,7 @@
                         <h4 class="card-title"> Clients </h4>
                     </div>
                     <div class="col-6 text-right">
-                        <input class="btn btn-primary float-end" type="button" value="Create New Client" href="#" data-bs-toggle="modal" data-bs-target="#newClientModal" />
+                            <input class="btn btn-outline-success float-end" type="button" value="Create New Client" href="#" data-bs-toggle="modal" data-bs-target="#newClientModal" />
                     </div>
                 </div>
                 <!--  Search and Sort -->
@@ -57,17 +95,23 @@
                     </div>
                     <div class="col-6">
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <!--Dropdown-->
                             <div class="dropdown">
                                 <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownSort" data-bs-toggle="dropdown" aria-expanded="false">
                                     Sort by
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownSort">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
+                                <div class="dropdown-menu" aria-labelledby="dropdownSort">
+                                    <button id="nameDDItem"    class="dropdown-item" type="button" href="#">Name</button>
+                                    <button id="addressDDItem" class="dropdown-item" type="button" href="#">Address</button>
+                                    <button id="markupDDItem"  class="dropdown-item" type="button" href="#">MarkupRate</button>
+                                    <div class="dropdown-divider"></div>
+                                    <button id="clearDDItem"  class="dropdown-item" type="button" href="#">Clear Sort</button>
+                                </div>
                             </div>
-                            <i class="bi bi-sort-up"></i>
+                            <!--Sort Toggle-->
+                            <button class="btn btn-outline-success" type="button" id="sortToggle">
+                                    <i class="bi bi-sort-up"></i>
+                                </button>
                         </div>
                     </div>
                 </div>
@@ -83,7 +127,7 @@
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">New Client</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

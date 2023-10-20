@@ -43,54 +43,53 @@ public class ClientController : Controller
         return RedirectToAction("Index", "Client", null);
     }
     [HttpGet]
-    public async Task<IActionResult> Search(string searchText)
+    public async Task<IActionResult> Search(string searchText, string sortBy ,string sortDirection)
     {
+
+        /*ViewBag.ClientNameSortParam = String.IsNullOrEmpty(sortDirection) ? "ClientName_desc" : "";
+        ViewBag.ClientAddressSortParam = sortDirection == "Address" ? "Address_desc" : "Address";
+        ViewBag.ClientAddressSortParam = sortDirection == "MarkupRate" ? "MarkupRate_desc" : "MarkupRate"; */
+
         ClientDto clientDto = await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false);
+        var result = new List<ClientDto>();
+
+        switch ((sortBy, sortDirection))
+        {
+            case ("Name","desc"):
+                result = clientDto.Clients.OrderByDescending(a => a.Name).ToList();
+                break;
+            case ("Address", "asc"):
+                result = clientDto.Clients.OrderBy(a => a.Address).ToList();
+                break;
+            case ("Address", "desc"):
+                result = clientDto.Clients.OrderByDescending(a => a.Address).ToList();
+                break;
+            case ("MarkupRate", "asc"):
+                result = clientDto.Clients.OrderBy(a => a.MarkupRate).ToList();
+                break;
+            case ("MarkupRate", "desc"):
+                result = clientDto.Clients.OrderByDescending(a => a.MarkupRate).ToList();
+                break;
+            default:
+                result = clientDto.Clients.OrderBy(a => a.Name).ToList();
+                break;
+
+        }
+
         if (searchText != null)
         {
             Console.WriteLine(clientDto.Clients);
             if (clientDto.Clients != null)
             {
-                var result = clientDto.Clients.Where(a => a.Name.ToLower().Contains(searchText.ToLower()) || a.Address.ToLower().Contains(searchText) || a.MarkupRate.ToString().Contains(searchText)).ToList();
+                result = clientDto.Clients.Where(a => a.Name.ToLower().Contains(searchText.ToLower()) || a.Address.ToLower().Contains(searchText) || a.MarkupRate.ToString().Contains(searchText)).ToList();
                 return PartialView("_TableView", result);
             }
            
         }
-        return PartialView("_TableView", clientDto.Clients);
+        return PartialView("_TableView", result);
         
     }
 
-    public async Task<IActionResult> Sort(string sortOrder)
-    {
-        ViewBag.ClientNameSortParam = String.IsNullOrEmpty(sortOrder) ? "ClientName_desc" : "";
-        ViewBag.ClientAddressSortParam = sortOrder == "Address" ? "Address_desc" : "Address";
-        ViewBag.ClientAddressSortParam = sortOrder == "MarkupRate" ? "MarkupRate_desc" : "MarkupRate";
-
-        ClientDto clientDto = await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false);
-        var result = new List<ClientDto>();
-        switch (sortOrder)
-        {
-            case "ClientName_desc":
-                result = clientDto.Clients.OrderByDescending(a => a.Name).ToList();
-                break;
-            case "Address":
-                result = clientDto.Clients.OrderBy(a => a.Address).ToList();
-                break;
-            case "Address_desc":
-                result = clientDto.Clients.OrderByDescending(a => a.Address).ToList();
-                break;
-            case "MarkupRate":
-                result = clientDto.Clients.OrderBy(a => a.MarkupRate).ToList();
-                break;
-            case "MarkupRate_desc":
-                result = clientDto.Clients.OrderByDescending(a => a.MarkupRate).ToList();
-                break;
-
-        }
-
-        return PartialView("_TableView", result);
-
-    }
 }
 
 

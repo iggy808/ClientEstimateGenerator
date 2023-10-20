@@ -1,7 +1,36 @@
 ﻿@using ClientPricingSystem.Core.Dtos
 @model List<ClientDto>
 
-@{
+@section scripts{
+     <script>
+        $(() => {
+            $('#edit').on('click', () => {
+                var row = $(this).closest("tr");
+                $("td", row).each(function () {
+                    if ($(this).find("input").length > 0) {
+                        var span = $(this).find("span");
+                        var input = $(this).find("input");
+                        span.html(input.val());
+                        span.show();
+                        input.hide();
+                    }
+                });
+                row.find(".Edit").show();
+                $(this).hide();
+
+                var customer = {};
+                customer.CustomerId = row.find(".CustomerId").find("span").html();
+                customer.Name = row.find(".Name").find("span").html();
+                customer.Country = row.find(".Country").find("span").html();
+                $.ajax({
+                    type: "POST",
+                    url: "/Client/UpdateClient",
+                    data: '{customer:' + JSON.stringify(customer) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+                });
+        });
+    </script>
 }
 
 
@@ -10,27 +39,23 @@
     <table class="table table-responsive table-hover table-striped rounded-3 overflow-hidden">
         <thead>
             <tr>
-                <th> Name</th>
-                <th> Address</th>
-                <th> MarkupRate</th>
+                <th> Name </th>
+                <th> Address </th>
+                <th> MarkupRate </th>
                 <th> </th>
             </tr>
         </thead>
         <tbody>       
             @if (Model.Count != 0)
             {
-                @foreach (var entry in Model)
+                @foreach (var client in Model)
                 {
                     <tr>
-                        <td> @entry.Name</td>
-                        <td> @entry.Address</td>
-                        <td> @entry.MarkupRate</td>
+                        <td> @client.Name</td>
+                        <td> @client.Address</td>
+                        <td> @client.MarkupRate</td>
                         <td>
-                            @*@Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                            @Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
-
-                            <a href="javascript:void(0);" class="anchorDetail" data-id="@entry.Id"> Details</a>
+                            <input id="editClient" class="btn btn-outline-success float-end" type="button" value="Edit" href="#" data-bs-toggle="modal" data-bs-target="#editClientModal" />
                         </td>
                     </tr>
                 }
@@ -45,3 +70,37 @@
         </tbody>
     </table>
 </div>
+
+@*<!-- Modal -->
+<div class="modal" id="editClientModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Edit", "Client", FormMethod.Post))
+                { 
+                    
+                    <span>@Html.LabelFor(m => m.Name)</span> @Html.TextBoxFor(m => m.Name) <br />
+                    <span>@Html.LabelFor(m => m.Address)</span> @Html.TextBoxFor(m => m.Address)
+
+                    <br />
+                    <span>@Html.LabelFor(m => m.MarkupRate)</span>
+
+                    @Html.EditorFor(m => m.MarkupRate)
+
+                    <br />
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    </div>
+</div>*@

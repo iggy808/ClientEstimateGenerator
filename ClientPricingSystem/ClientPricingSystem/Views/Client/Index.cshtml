@@ -9,6 +9,7 @@
     <script>
         $(() => {
             getClients();
+
             $('#clientSearch').on('keyup', () => {
                 getClients();
             });
@@ -31,6 +32,10 @@
 
             $('#clearDDItem').on("click", () => {
                 $('#dropdownSort').text('Sort By');
+            });
+
+            $('#newClientModal').on('show.bs.modal', function (event) {
+                console.log("modal modeeeeee");
             });
 
         });
@@ -69,6 +74,7 @@
             }
 
         }
+
     </script>
 }
 

@@ -19,7 +19,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Index">ClientPricingSystem</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -43,12 +43,46 @@
                     </ul>
                 </div>
             </div>
-        </nav>
+        </nav> -->
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+    <div class="container-fluid">
+        <div class="row flex-grow-sm-1 flex-grow-0 bg-primary">
+            <!-- Side Navigation -->
+            <div class="col-sm-2 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0">
+                <div class="rounded-3 p-1 h-100 sticky-top">
+                    <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate">
+                        <li>
+                            <a class="nav-link px-2 text-truncate" asp-controller="Dashboard" asp-action="Index">
+                                <i class="bi bi-speedometer fs-5"></i>
+                                <span class="d-none d-sm-inline">Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link px-2 text-truncate" asp-controller="Order" asp-action="Index">
+                                <i class="bi bi-card-text fs-5"></i>
+                                <span class="d-none d-sm-inline">Orders</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link px-2 text-truncate" asp-controller="Vendor" asp-action="Index">
+                                <i class="bi bi-bricks fs-5"></i>
+                                <span class="d-none d-sm-inline">Vendors</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link px-2 text-truncate" asp-controller="Client" asp-action="Index">
+                                <i class="bi bi-people fs-5"></i>
+                                <span class="d-none d-sm-inline">Clients</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <main role="main" class="col overflow-auto h-100">
+                @RenderBody()
+            </main>
+        </div>
     </div>
 
     <footer class="border-top footer text-muted">

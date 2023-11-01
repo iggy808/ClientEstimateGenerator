@@ -5,17 +5,15 @@
 
 <script>
     $('#editClientModal').on('show.bs.modal', function (event) {
-        var triggerElement = $(event.relatedTarget);
-        console.log(triggerElement);
-        var row = $(triggerElement).closest("tr");
-        console.log(row.html());
-        console.log(row.find("td"));
-        var data = row.find("td");
-        var name = data[0];
-        var addr = data[1]
-        console.log(data[0]);
-        $('#modalBody').append(name);
-        
+        var $button = $(event.relatedTarget);
+        var $row = $button.closest("tr");
+        console.log($row);
+        var $tds = $row.find("td");
+        console.log($tds);
+
+        $.each($tds, function(i, value) {
+            $(":text:eq(" + `${i}` + ")").val($(this).text());
+        })
     })
 
 </script>
@@ -40,7 +38,9 @@
                         <td> @client.Address</td>
                         <td> @client.MarkupRate</td>
                         <td>
-                            <input id="editButton" class="btn btn-outline-success float-end" type="button" value="Edit" href="#" data-bs-toggle="modal" data-bs-target="#editClientModal" />
+                            <button id="editButton" class="btn btn-outline-success float-end" type="button" href="#" data-bs-toggle="modal" data-bs-target="#editClientModal">
+                                <i class="bi bi-pen"></i>
+                            </button>
                         </td>
                     </tr>
                 }
@@ -65,9 +65,73 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div id="modalBody" class="modal-body">
-
+                <div class="form-group">
+                    <label>Name</label>
+                    <input class="form-control mr-sm-2" type="text" id="name" />
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input class="form-control mr-sm-2" type="text" id="address" />
+                </div>
+                <div class="form-group">
+                    <label>MarkupRate</label>
+                    <input class="form-control mr-sm-2" type="text" id="age" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="btnSave" onclick="SaveChanges()" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
+
+<style>
+    .modal-content{
+        font-family: 'Titillium Web', sans-serif;
+    }
+
+    .modal-title{
+        color: #000;
+        font-size: 25px;
+        font-weight: 600;
+        text-transform: capitalize;
+        margin: 0 0 5px;
+    }
+
+    .modal-title:after{
+        content: '';
+        background-color: #00A9EF;
+        height: 3px;
+        width: 110px;
+        margin: 5px 0 0;
+        display: block;
+        clear: both;
+    }
+
+    .modal-body .form-group{
+        color: #333;
+        width: auto;
+        padding: 0 8px;
+        margin: 0 0 15px;
+    }
+
+    .modal-body .form-group label{
+        font-size: 18px;
+        font-weight: 600px;
+        font-style: bold;
+    }
+
+    .modal-body .form-group .form-control{
+        background: #fff;
+        font-weight: 400;
+        letter-spacing: 1px;
+        height: 40px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 2px solid #e7e7e7;
+        box-shadow: none;
+    }
+
+</style>

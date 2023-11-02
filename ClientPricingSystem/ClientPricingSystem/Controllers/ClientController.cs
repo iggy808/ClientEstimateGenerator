@@ -1,5 +1,6 @@
 ﻿using ClientPricingSystem.Core.Dtos;
 using ClientPricingSystem.Core.Methods.Client;
+using ClientPricingSystem.Views.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -43,7 +44,7 @@ public class ClientController : Controller
         return RedirectToAction("Index", "Client", null);
     }
     [HttpGet]
-    public async Task<IActionResult> Search(string searchText, string sortBy ,string sortDirection)
+    public async Task<IActionResult> Search(string searchText, string sortBy ,string sortDirection, int page=1)
     {
 
         /*ViewBag.ClientNameSortParam = String.IsNullOrEmpty(sortDirection) ? "ClientName_desc" : "";
@@ -53,6 +54,7 @@ public class ClientController : Controller
         ClientDto clientDto = await _mediator.Send(new GetAllCleints_ToDto.Query()).ConfigureAwait(false);
         var result = new List<ClientDto>();
 
+        //Sort
         switch ((sortBy, sortDirection))
         {
             case ("Name","desc"):
@@ -75,18 +77,30 @@ public class ClientController : Controller
                 break;
 
         }
-
+        //Search
         if (searchText != null)
         {
             Console.WriteLine(clientDto.Clients);
             if (clientDto.Clients != null)
             {
                 result = clientDto.Clients.Where(a => a.Name.ToLower().Contains(searchText.ToLower()) || a.Address.ToLower().Contains(searchText) || a.MarkupRate.ToString().Contains(searchText)).ToList();
-                return PartialView("_TableView", result);
+                var tableViewSearch = new TableViewModel
+                {
+                    RecordsPerPage = 10,
+                    Records = result,
+                    CurrentPage = page
+                };
+                return PartialView("_TableView", tableViewSearch);
             }
            
         }
-        return PartialView("_TableView", result);
+        var tableView = new TableViewModel
+        {
+            RecordsPerPage = 10,
+            Records = result,
+            CurrentPage = page
+        };
+        return PartialView("_TableView", tableView);
         
     }
 

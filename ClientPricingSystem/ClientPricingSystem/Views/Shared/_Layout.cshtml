@@ -46,8 +46,7 @@
         </nav> -->
     </header>
 
-    <div class="container-fluid">
-        <div class="row flex-grow-sm-1 flex-grow-0 bg-primary">
+        @{/*<div class="row flex-grow-sm-1 flex-grow-0 bg-primary">
             <!-- Side Navigation -->
             <div class="col-sm-2 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0">
                 <div class="rounded-3 p-1 h-100 sticky-top">
@@ -79,16 +78,58 @@
                     </ul>
                 </div>
             </div>
-            <main role="main" class="col overflow-auto h-100">
-                @RenderBody()
-            </main>
-        </div>
-    </div>
+        </div> */}
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - ClientPricingSystem - <a asp-area="" asp-controller="Dashboard" asp-action="Privacy">Privacy</a>
+    <div id="sidebar" class="sidebar">
+        <div class="logo_content">
+            <div class="logo">
+                <i class="bi bi-bootstrap"></i>
+                <div class="logo_name">Tommy's Tees</div>
+            </div>
+            <i class="bi bi-list" id="btn"></i>
         </div>
-    </footer>
+        <ul class="nav_list">
+            <li>
+                <a href="#">
+                    <i class="bi bi-speedometer"></i>
+                    <span class="links_name">Dashboard</span>
+                </a>
+                <!--<span class="tooltip">Dashboard</span>-->
+            </li>
+            <li>
+                <a href="#">
+                    <i class="bi bi-people fs-5"></i>
+                    <span class="links_name">Clients</span>
+                </a>
+                <!--<span class="tooltip">Dashboard</span>-->
+            </li>
+            <li>
+                <a href="#">
+                    <i class="bi bi-bricks fs-5"></i>
+                    <span class="links_name">Vendors</span>
+                </a>
+                <!--<span class="tooltip">Dashboard</span>-->
+            </li>
+            <li>
+                <a href="#">
+                    <i class="bi bi-card-text fs-5"></i>
+                    <span class="links_name">Orders</span>
+                </a>
+                <!--<span class="tooltip">Dashboard</span>-->
+            </li>
+        </ul>
+    </div>
+    <main role="main" class="main">
+        @RenderBody()
+    </main>
+
+    <script>
+        $('#btn').click(function () {
+            var sidebar = $('#sidebar');
+            console.log(sidebar);
+            sidebar.toggleClass('sidebar').toggleClass('sidebar active')
+            
+        });
+    </script>
 </body>
 </html>

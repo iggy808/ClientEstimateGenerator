@@ -3,114 +3,145 @@ for details on configuring this project to bundle and minify static web assets. 
 
 
 html, body {
-    position: relative;
-    min-height: 100vh;
-    width: 100%;
-    overflow: hidden;
-}
-
-.row{
-    padding: .25rem;
     height: 100%;
 }
 
-.sidebar{
-    position: fixed;
-    top:0;
-    left: 0;
+.body {
+    font-family: 'Franklin Gothic'
+}
+
+.wrapper {
+    display: flex;
     height: 100%;
-    width: 70px;
+}
+
+.sidebar {
+    flex-grow: 1;
     background: #11101d;
-    padding: 6px 14px;
-    transition: all 0.5s ease;
+    padding: 6px 6px;
+    transition: all 1s ease;
 }
 
-.sidebar.active{
-    width: 240px;
+    .sidebar.active {
+        display: flex;
+        flex-grow: 2;
+        flex-direction: column;
+        min-height: 100%;
+        background: #002B36;
+        padding: 6px 6px;
+        transition: all .4s ease;
+    }
+
+.sidebar .logo_content {
+    display: flex;
+    justify-content: center;
 }
+
 
 .sidebar.active .logo_content .logo {
     opacity: 1;
-}
-
-.sidebar .logo_content .logo{
     color: #fff;
     display: flex;
     height: 50px;
     width: 100%;
     align-items: center;
-    opacity: 0;
-    pointer-events: none;
 }
 
-.logo_content .logo i{
+.sidebar .logo_content .logo{
+    display: none;
+}
+
+.logo_content .logo i {
     font-size: 24px;
     margin-right: 5px;
+    align-items: center;
 }
 
 .logo_content .logo .logo_name{
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 400;
     white-space:nowrap;
 }
 
-.sidebar #btn{
-    position:  absolute;
+.sidebar #btn {
+    display: flex;
     color: #fff;
-    left: 50%;
-    top:9px;
     font-size: 24px;
+    min-width: 50px;
     height: 50px;
-    width: 50px;
     text-align: center;
     line-height: 50px;
-    transform: translate(-50%);
+    align-items: center;
+    justify-content: center;
 }
 
 .sidebar.active #btn {
-    left: 90%;
+    display: flex;
+    color: #fff;
+    font-size: 24px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    align-items: center;
 }
 
 .sidebar ul {
-    margin-top: 20px;
-    padding-left: 0rem;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
 }
 
-.sidebar ul li{
-    position: relative;
-    height: 50px;
+.sidebar.active ul {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    margin: 0 5px;
-    list-style: none;
-    line-height: 50px;
+    opacity: 1;
+    padding: 0;
 }
 
-.sidebar ul li a{
+.sidebar ul li {
+    display: flex;
+}
+
+.sidebar ul li a {
     color: #fff;
     display: flex;
-    align-items: center;
     text-decoration: none;
-    transition: all 0.4s ease;
+    width: 100%;
     border-radius: 12px;
     white-space: nowrap;
-    transition: all 0.5s ease;
+    transition: all 1s ease;
 }
 
-.sidebar ul li a:hover{
+.sidebar ul li a:hover {
     color: #11101d;
     background: #fff;
+    width: 100%;
+    justify-content: center;
 }
 
-.sidebar ul li a i{
+.sidebar ul li a i {
+    display: flex;
     height: 50px;
-    min-width: 50px;
+    width: 100%;
     border-radius: 12px;
     line-height: 50px;
     font-size: 24px;
-    margin-left: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar.active ul li a i {
+    display: flex;
+    width: 40px;
+    border-radius: 12px;
+    line-height: 50px;
+    font-size: 24px;
+    align-items: center;
 }
 
 .sidebar.active .links_name{
+    display: flex;
     height: 50px;
     min-width: 50px;
     border-radius: 12px;
@@ -122,25 +153,23 @@ html, body {
 }
 
 .sidebar .links_name{
-    opacity: 0;
+    display: none;
     pointer-events: none;
 }
 
 .main{
-    position: absolute;
-    height: 100%;
-    width: calc(100%-24opx);
-    left: 240px;
+    min-height: 100%;
+    flex-grow: 9;
+    width: calc(100% - 240px);
+    transform: translate3d(0,0,0);
+    transition: transform .1s;
+    margin: 0 25px 0 25px;
 }
 
 a.navbar-brand {
     white-space: normal;
     text-align: center;
     word-break: break-all;
-}
-
-a {
-  color: blue;
 }
 
 .btn-primary {

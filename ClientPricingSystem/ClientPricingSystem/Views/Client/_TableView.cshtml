@@ -5,6 +5,7 @@
 
 <script>
     $('#editClientModal').on('show.bs.modal', function (event) {
+        $("#editClientModal").prependTo("body");
         var $button = $(event.relatedTarget);
         var $row = $button.closest("tr");
         console.log($row);

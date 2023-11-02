@@ -86,7 +86,7 @@ public class ClientController : Controller
                 result = clientDto.Clients.Where(a => a.Name.ToLower().Contains(searchText.ToLower()) || a.Address.ToLower().Contains(searchText) || a.MarkupRate.ToString().Contains(searchText)).ToList();
                 var tableViewSearch = new TableViewModel
                 {
-                    RecordsPerPage = 10,
+                    RecordsPerPage = 13,
                     Records = result,
                     CurrentPage = page
                 };
@@ -96,7 +96,7 @@ public class ClientController : Controller
         }
         var tableView = new TableViewModel
         {
-            RecordsPerPage = 10,
+            RecordsPerPage = 13,
             Records = result,
             CurrentPage = page
         };

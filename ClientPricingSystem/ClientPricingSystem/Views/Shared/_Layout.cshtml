@@ -46,83 +46,52 @@
         </nav> -->
     </header>
 
-        @{/*<div class="row flex-grow-sm-1 flex-grow-0 bg-primary">
-            <!-- Side Navigation -->
-            <div class="col-sm-2 flex-grow-sm-1 flex-shrink-1 flex-grow-0 sticky-top pb-sm-0">
-                <div class="rounded-3 p-1 h-100 sticky-top">
-                    <ul class="nav nav-pills flex-sm-column flex-row mb-auto justify-content-between text-truncate">
-                        <li>
-                            <a class="nav-link px-2 text-truncate" asp-controller="Dashboard" asp-action="Index">
-                                <i class="bi bi-speedometer fs-5"></i>
-                                <span class="d-none d-sm-inline">Dashboard</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link px-2 text-truncate" asp-controller="Order" asp-action="Index">
-                                <i class="bi bi-card-text fs-5"></i>
-                                <span class="d-none d-sm-inline">Orders</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link px-2 text-truncate" asp-controller="Vendor" asp-action="Index">
-                                <i class="bi bi-bricks fs-5"></i>
-                                <span class="d-none d-sm-inline">Vendors</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link px-2 text-truncate" asp-controller="Client" asp-action="Index">
-                                <i class="bi bi-people fs-5"></i>
-                                <span class="d-none d-sm-inline">Clients</span>
-                            </a>
-                        </li>
-                    </ul>
+    <div id="wrapper" class="wrapper bg-light">
+        <!--SIDEBAR-->
+        <div id="sidebar" class="sidebar active">
+            <div class="logo_content">
+                <div class="logo">
+                    <i class="bi bi-bootstrap"></i>
+                    <div class="logo_name">Tommy's Tees</div>
                 </div>
+                <i class="bi bi-list" id="btn"></i>
             </div>
-        </div> */}
-
-    <div id="sidebar" class="sidebar">
-        <div class="logo_content">
-            <div class="logo">
-                <i class="bi bi-bootstrap"></i>
-                <div class="logo_name">Tommy's Tees</div>
-            </div>
-            <i class="bi bi-list" id="btn"></i>
+            <ul class="nav_list">
+                <li>
+                    <a href="/Dashboard">
+                        <i class="bi bi-speedometer"></i>
+                        <span class="links_name">Dashboard</span>
+                    </a>
+                    <!--<span class="tooltip">Dashboard</span>-->
+                </li>
+                <li>
+                    <a href="/Client">
+                        <i class="bi bi-people fs-5"></i>
+                        <span class="links_name">Clients</span>
+                    </a>
+                    <!--<span class="tooltip">Dashboard</span>-->
+                </li>
+                <li>
+                    <a href="/Vendor">
+                        <i class="bi bi-bricks fs-5"></i>
+                        <span class="links_name">Vendors</span>
+                    </a>
+                    <!--<span class="tooltip">Dashboard</span>-->
+                </li>
+                <li>
+                    <a href="/Order">
+                        <i class="bi bi-card-text fs-5"></i>
+                        <span class="links_name">Orders</span>
+                    </a>
+                    <!--<span class="tooltip">Dashboard</span>-->
+                </li>
+            </ul>
         </div>
-        <ul class="nav_list">
-            <li>
-                <a href="#">
-                    <i class="bi bi-speedometer"></i>
-                    <span class="links_name">Dashboard</span>
-                </a>
-                <!--<span class="tooltip">Dashboard</span>-->
-            </li>
-            <li>
-                <a href="#">
-                    <i class="bi bi-people fs-5"></i>
-                    <span class="links_name">Clients</span>
-                </a>
-                <!--<span class="tooltip">Dashboard</span>-->
-            </li>
-            <li>
-                <a href="#">
-                    <i class="bi bi-bricks fs-5"></i>
-                    <span class="links_name">Vendors</span>
-                </a>
-                <!--<span class="tooltip">Dashboard</span>-->
-            </li>
-            <li>
-                <a href="#">
-                    <i class="bi bi-card-text fs-5"></i>
-                    <span class="links_name">Orders</span>
-                </a>
-                <!--<span class="tooltip">Dashboard</span>-->
-            </li>
-        </ul>
-    </div>
-    <main role="main" class="main">
-        @RenderBody()
-    </main>
 
+        <main role="main" class="main">
+            @RenderBody()
+        </main>
+    </div>
     <script>
         $('#btn').click(function () {
             var sidebar = $('#sidebar');
